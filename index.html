@@ -203,7 +203,8 @@ const TUNINGS = {
     {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
 };
 // 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호
-const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[1,0],R:[2,3]} };
+// 베이스는 펜더식 4-in-line: 페그 4개가 한쪽에 일렬이고 팁 쪽이 G, 너트 쪽이 E
+const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[3,2,1,0],R:[]} };
 const IN_TUNE = 3;      // ±센트
 const GATE_RMS = 0.008; // 이하 무음 처리
 const HOLD_MS = 900;
@@ -250,15 +251,19 @@ const NS='http://www.w3.org/2000/svg';
 const el=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
 function renderStrings(){
   const deco=$('deco'), box=$('pegs'); deco.textContent=''; box.textContent=''; pegEls=[];
-  el('path',{class:'hd',d:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z'},deco);
+  const HEAD={
+    guitar:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z',
+    bass:'M134 330 L134 254 C134 236 106 224 104 196 L104 62 C104 28 128 12 158 12 C182 12 198 26 198 54 L198 92 C198 112 190 130 190 158 L190 254 L190 330 Z'
+  };
+  el('path',{class:'hd',d:HEAD[inst]},deco);
   const P=PEGS[inst], list=TUNINGS[inst].strings;
-  const ys = n => n===3 ? [62,128,194] : [90,160];
-  [['L',44,112],['R',276,208]].forEach(([side,px,hx])=>{
+  const ys = n => n===4 ? [46,104,162,220] : [62,128,194];
+  (inst==='bass' ? [['L',44,106]] : [['L',44,112],['R',276,208]]).forEach(([side,px,hx])=>{
     const idxs=P[side], yy=ys(idxs.length);
     idxs.forEach((si,k)=>{
       const y=yy[k], s=list[si];
       el('line',{class:'stem',x1:hx,y1:y,x2:px,y2:y},deco);
-      el('circle',{class:'post',cx:side==='L'?132:188,cy:y,r:8},deco);
+      el('circle',{class:'post',cx:inst==='bass'?126:(side==='L'?132:188),cy:y,r:8},deco);
       const g=el('g',{class:'peg',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
       el('circle',{class:'hit',cx:px,cy:y,r:34},g);
       el('circle',{class:'pc',cx:px,cy:y,r:27},g);
