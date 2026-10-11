@@ -259,13 +259,13 @@ function renderStrings(){
   el('path',{class:'hd',d:HEAD[inst]},deco);
   const P=PEGS[inst], list=TUNINGS[inst].strings;
   const ys = n => n===4 ? [46,104,162,220] : [62,128,194];
-  // 베이스: 사진의 페그 위치 (y, 헤드 왼쪽 가장자리 x, 고정부 x)
-  const BASS_PEGS=[{y:76,edge:135,post:170},{y:138,edge:124,post:156},{y:200,edge:109,post:142},{y:260,edge:102,post:130}];
+  // 베이스: 페그 4개를 한 줄로 배열 (같은 간격, 같은 x), 줄 고정부도 한 줄
+  const BASS_PEGS=[{y:76,edge:44,post:150},{y:138,edge:44,post:150},{y:200,edge:44,post:150},{y:262,edge:44,post:150}];
   (inst==='bass' ? [['L',44,106]] : [['L',44,112],['R',276,208]]).forEach(([side,px,hx])=>{
     const idxs=P[side], yy=ys(idxs.length);
     idxs.forEach((si,k)=>{
       const bp=inst==='bass'?BASS_PEGS[k]:null, y=bp?bp.y:yy[k], s=list[si];
-      el('line',{class:'stem',x1:bp?bp.edge:hx,y1:y,x2:px,y2:y},deco);
+      el('line',{class:'stem',x1:bp?bp.post:hx,y1:y,x2:px,y2:y},deco);
       el('circle',{class:'post',cx:bp?bp.post:(side==='L'?132:188),cy:y,r:8},deco);
       const g=el('g',{class:'peg',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
       el('circle',{class:'hit',cx:px,cy:y,r:34},g);
