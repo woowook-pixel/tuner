@@ -253,7 +253,7 @@ function renderStrings(){
   const deco=$('deco'), box=$('pegs'); deco.textContent=''; box.textContent=''; pegEls=[];
   const HEAD={
     guitar:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z',
-    bass:'M134 330 L134 254 C134 236 106 224 104 196 L104 62 C104 28 128 12 158 12 C182 12 198 26 198 54 L198 92 C198 112 190 130 190 158 L190 254 L190 330 Z'
+    bass:'M138 330 L138 266 C138 242 104 232 100 200 L100 64 C100 30 124 12 156 12 C184 12 202 26 202 54 C202 76 191 88 191 114 L191 330 Z'
   };
   el('path',{class:'hd',d:HEAD[inst]},deco);
   const P=PEGS[inst], list=TUNINGS[inst].strings;
