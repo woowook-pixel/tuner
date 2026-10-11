@@ -203,8 +203,8 @@ const TUNINGS = {
     {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
 };
 // 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호
-// 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호. 베이스는 줄이 4개라 2+2
-const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[1,0],R:[2,3]} };
+// 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호. 베이스는 4개를 한쪽에 일렬로 놓고 팁 쪽이 G, 너트 쪽이 E
+const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[3,2,1,0],R:[]} };
 const IN_TUNE = 3;      // ±센트
 const GATE_RMS = 0.008; // 이하 무음 처리
 const HOLD_MS = 900;
@@ -254,12 +254,12 @@ function renderStrings(){
   const HEAD={
     guitar:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z',
     // 베이스: 기타와 같은 헤드를 세로로 길게 늘린 모양
-    bass:'M130 330 L130 284 C130 252 110 238 110 208 L110 50 Q110 8 160 8 Q210 8 210 50 L210 208 C210 238 190 252 190 284 L190 330 Z'
+    bass:'M130 330 L130 300 C130 268 110 254 110 224 L110 50 Q110 8 160 8 Q210 8 210 50 L210 224 C210 254 190 268 190 300 L190 330 Z'
   };
   el('path',{class:'hd',d:HEAD[inst]},deco);
   const P=PEGS[inst], list=TUNINGS[inst].strings;
-  const ys = n => n===3 ? [62,128,194] : [84,176];
-    [['L',44,112],['R',276,208]].forEach(([side,px,hx])=>{
+  const ys = n => n===4 ? [52,114,176,238] : [62,128,194];
+    (inst==='bass' ? [['L',44,112]] : [['L',44,112],['R',276,208]]).forEach(([side,px,hx])=>{
     const idxs=P[side], yy=ys(idxs.length);
     idxs.forEach((si,k)=>{
       const y=yy[k], s=list[si];
