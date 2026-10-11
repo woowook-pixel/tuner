@@ -39,9 +39,14 @@ button{font:inherit;color:inherit}
 .tools{display:flex;gap:8px}
 .icon{width:44px;height:44px;border:0;border-radius:50%;background:var(--card);box-shadow:0 1px 2px rgba(15,23,42,.08);
   display:grid;place-items:center;cursor:pointer}
+.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.big{width:44px;height:44px}
+.ic.sm{width:18px;height:18px}
 .icon svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-#stopBtn{width:auto;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;display:none}
-body[data-run="1"] #stopBtn{display:block}
+.left{display:flex;align-items:center;gap:8px}
+#stopBtn{width:auto;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;display:none;align-items:center;gap:6px}
+#stopBtn svg{width:16px;height:16px;fill:currentColor;stroke:none}
+body[data-run="1"] #stopBtn{display:inline-flex}
 
 /* 중앙: 음 원판 + 높낮이 막대 */
 .readout{display:flex;flex-direction:column;align-items:center;padding-top:10px;--sc:var(--muted)}
@@ -59,13 +64,14 @@ body[data-run="1"] #stopBtn{display:block}
 .cents{font-size:18px;font-weight:700;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
 .readout[data-state="good"] .cents{color:#fff}
 .msg{margin-top:16px;text-align:center;min-height:56px}
+.status .ar{font-size:.8em;margin-right:4px}
 .status{font-size:20px;font-weight:700;min-height:1.4em}
 .readout[data-state="good"] .status{color:var(--good)}
 .readout[data-state="near"] .status,.readout[data-state="off"] .status{color:var(--off)}
 .hz{margin-top:2px;font-size:13px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
 #startBtn{display:none;height:56px;padding:0 32px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;cursor:pointer;
   box-shadow:0 6px 16px rgba(15,23,42,.25)}
-body[data-run="0"] #startBtn{display:inline-block}
+body[data-run="0"] #startBtn{display:inline-flex;align-items:center;gap:10px}
 body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
 .err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:6px;color:var(--off)}
 
@@ -106,11 +112,11 @@ body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
 .sheet{width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom,0px))}
 .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
 .sheet h2{margin:0 0 14px;font-size:18px}
-.sheet h3{margin:20px 0 4px;font-size:14px;color:var(--muted)}
+.sheet h3{margin:20px 0 8px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{height:64px;border:2px solid var(--line);border-radius:16px;background:var(--card);font-size:16px;font-weight:700;cursor:pointer}
+.opt{height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px solid var(--line);border-radius:16px;background:var(--card);font-size:16px;font-weight:700;cursor:pointer}
 .opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
-.opt small{display:block;font-size:12px;font-weight:500;opacity:.7}
+.opt small{display:block;margin-top:-2px;font-size:12px;font-weight:500;opacity:.7}
 .refrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .refrow p{margin:0;font-size:13px;line-height:1.5;color:var(--muted);flex:1}
 .step{display:flex;align-items:center;gap:6px}
@@ -121,13 +127,23 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 </style>
 </head>
 <body data-run="0">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="ic-guitar" viewBox="0 0 48 48"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="8.0" y1="6" x2="8.0" y2="43" stroke-width="2.4"/><line x1="14.4" y1="6" x2="14.4" y2="43" stroke-width="2.0"/><line x1="20.8" y1="6" x2="20.8" y2="43" stroke-width="1.7"/><line x1="27.2" y1="6" x2="27.2" y2="43" stroke-width="1.4"/><line x1="33.6" y1="6" x2="33.6" y2="43" stroke-width="1.0"/><line x1="40.0" y1="6" x2="40.0" y2="43" stroke-width="0.6"/></g><rect x="3" y="15" width="42" height="7" rx="3.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="ic-bass" viewBox="0 0 48 48"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="8.0" y1="6" x2="8.0" y2="43" stroke-width="3.6"/><line x1="18.7" y1="6" x2="18.7" y2="43" stroke-width="2.7"/><line x1="29.3" y1="6" x2="29.3" y2="43" stroke-width="1.8"/><line x1="40.0" y1="6" x2="40.0" y2="43" stroke-width="0.9"/></g><rect x="3" y="15" width="42" height="7" rx="3.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="currentColor" stroke="none"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"/></symbol>
+  <symbol id="ic-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="3" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="ic-fork" viewBox="0 0 24 24"><path d="M8 3v8a4 4 0 0 0 8 0V3M12 15v6.5"/></symbol>
+</svg>
 <main class="app">
   <div class="top">
-    <button class="chip" id="autoChip" aria-pressed="true"><i></i><span id="autoTxt">자동 감지</span></button>
+    <div class="left">
+      <button class="icon" id="instBtn" aria-label="악기 선택"><svg class="ic" style="width:28px;height:28px"><use id="instUse" href="#ic-guitar"/></svg></button>
+      <button class="chip" id="autoChip" aria-pressed="true"><i></i><span id="autoTxt">자동 감지</span></button>
+    </div>
     <div class="tools">
-      <button class="icon" id="stopBtn" aria-label="정지">정지</button>
+      <button class="icon" id="stopBtn" aria-label="정지"><svg class="ic"><use href="#ic-stop"/></svg>정지</button>
       <button class="icon" id="gearBtn" aria-label="설정">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        <svg viewBox="0 0 24 24"><path fill="currentColor" stroke="none" fill-rule="evenodd" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6Z"/></svg>
       </button>
     </div>
   </div>
@@ -138,7 +154,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
       <div class="cents" id="cents"></div>
     </div>
     <div class="msg" aria-live="polite">
-      <button id="startBtn">마이크 켜고 시작</button>
+      <button id="startBtn"><svg class="ic"><use href="#ic-mic"/></svg>마이크 켜고 시작</button>
       <div class="status" id="status">줄을 튕기세요</div>
       <div class="hz" id="hz"></div>
     </div>
@@ -160,12 +176,12 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
   <div class="sheet" role="dialog" aria-modal="true" aria-label="설정">
     <div class="grab"></div>
     <h2>설정</h2>
-    <h3>악기</h3>
+    <h3>악기 선택</h3>
     <div class="opts">
-      <button class="opt" data-inst="guitar" aria-pressed="true">기타<small>6현 E A D G B E</small></button>
-      <button class="opt" data-inst="bass" aria-pressed="false">베이스<small>4현 E A D G</small></button>
+      <button class="opt" data-inst="guitar" aria-pressed="true"><svg class="ic big"><use href="#ic-guitar"/></svg>기타<small>6현 E A D G B E</small></button>
+      <button class="opt" data-inst="bass" aria-pressed="false"><svg class="ic big"><use href="#ic-bass"/></svg>베이스<small>4현 E A D G</small></button>
     </div>
-    <h3>기준음 (A4)</h3>
+    <h3><svg class="ic sm"><use href="#ic-fork"/></svg>기준음 (A4)</h3>
     <div class="refrow">
       <p>피아노 등 다른 악기와 음높이를 맞출 때만 바꿉니다. 보통은 440Hz 그대로 두면 됩니다.</p>
       <div class="step">
@@ -258,6 +274,7 @@ function renderStrings(){
     });
   });
   document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
+  $('instUse').setAttribute('href','#ic-'+inst);
   showNote(list[0]);
   syncAuto();
   setActive(auto?-1:locked);
@@ -294,6 +311,7 @@ const sheet=$('scrim');
 const openSheet=()=>{ sheet.hidden=false; $('doneBtn').focus(); };
 const closeSheet=()=>{ sheet.hidden=true; $('gearBtn').focus(); };
 $('gearBtn').onclick=openSheet;
+$('instBtn').onclick=openSheet;
 $('doneBtn').onclick=closeSheet;
 sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!sheet.hidden) closeSheet(); });
@@ -358,7 +376,7 @@ function draw(s,c,f){
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
   $('cents').textContent = good ? '맞음' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
-  $('status').textContent = good ? '정확합니다' : (r<0 ? '낮습니다, 조이세요' : '높습니다, 푸세요');
+  $('status').innerHTML = good ? '정확합니다' : (r<0 ? '<span class="ar">▲</span>낮습니다, 조이세요' : '<span class="ar">▼</span>높습니다, 푸세요');
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
   pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
