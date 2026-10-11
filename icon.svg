@@ -1,28 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <title>튜너 아이콘 원본 (정확 상태의 원판과 헤드스톡)</title>
-  <defs>
-    <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#34D676"/>
-      <stop offset="1" stop-color="#128A3E"/>
-    </linearGradient>
-  </defs>
-  <!-- 배경: 전면 채움 (maskable 대응). 핵심 도형은 중앙 지름 약 380px 안쪽 -->
+  <title>튜너 아이콘 원본 (현과 튜닝 막대)</title>
+  <!-- 배경: 전면 채움 (maskable 대응). 핵심 도형은 중앙 지름 약 390px 안쪽 -->
   <rect width="512" height="512" fill="#0F172A"/>
-  <!-- 정확 상태를 뜻하는 초록 원판 -->
-  <circle cx="256" cy="256" r="184" fill="url(#orb)"/>
-  <circle cx="256" cy="256" r="184" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="6"/>
-  <!-- 헤드스톡과 페그 -->
-  <g stroke="#fff" stroke-width="12" stroke-linecap="round">
-    <line x1="222" y1="198" x2="180" y2="198"/><line x1="222" y1="256" x2="180" y2="256"/><line x1="222" y1="314" x2="180" y2="314"/>
-    <line x1="290" y1="198" x2="332" y2="198"/><line x1="290" y1="256" x2="332" y2="256"/><line x1="290" y1="314" x2="332" y2="314"/>
-  </g>
-  <g fill="#fff">
-    <circle cx="164" cy="198" r="22"/><circle cx="164" cy="256" r="22"/><circle cx="164" cy="314" r="22"/>
-    <circle cx="348" cy="198" r="22"/><circle cx="348" cy="256" r="22"/><circle cx="348" cy="314" r="22"/>
-    <path d="M226 440 L226 372 C226 350 214 340 214 322 L214 178 Q214 132 256 132 Q298 132 298 178 L298 322 C298 340 286 350 286 372 L286 440 Z"/>
-  </g>
-  <g fill="#128A3E">
-    <circle cx="238" cy="198" r="7"/><circle cx="238" cy="256" r="7"/><circle cx="238" cy="314" r="7"/>
-    <circle cx="274" cy="198" r="7"/><circle cx="274" cy="256" r="7"/><circle cx="274" cy="314" r="7"/>
-  </g>
+  <!-- 기타 줄 6개: 왼쪽이 굵은 저음현, 맞춰진 줄은 초록 -->
+  <rect x="143.5" y="96" width="13" height="320" rx="6.5" fill="#475569"/><rect x="192.5" y="96" width="11" height="320" rx="5.5" fill="#475569"/><rect x="241.5" y="96" width="9" height="320" rx="4.5" fill="#475569"/><rect x="290.5" y="96" width="7" height="320" rx="3.5" fill="#34D676"/><rect x="339.0" y="96" width="6" height="320" rx="3.0" fill="#475569"/><rect x="387.5" y="96" width="5" height="320" rx="2.5" fill="#475569"/>
+  <!-- 튜닝 막대: 줄 위를 가로지르는 인디케이터 -->
+  <rect x="96" y="236" width="320" height="44" rx="22" fill="#34D676"/>
+  <circle cx="256" cy="258" r="10" fill="#0F172A"/>
 </svg>
