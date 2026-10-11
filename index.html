@@ -10,76 +10,76 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="튜너">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#111216">
+<meta name="theme-color" content="#F6F4EF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --field:#111216; --fg:#F4F5F8; --fg2:rgba(244,245,248,.62); --edge:rgba(244,245,248,.22); --tile:rgba(244,245,248,.08);
+  --bg:#F6F4EF; --ink:#1B1D22; --muted:#767B87; --line:#C9CCD4; --tile:#ECE9E1;
+  --amber:#E08A00; --on-amber:#1A1208; --good:#0F9F63; --off:#D9482B;
+  --sc:var(--amber);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
-html{height:100%;background:#111216}
-/* 화면 전체 색이 상태를 말한다: 낮음=파랑, 정확=초록, 높음=주황 */
-body{height:100%;margin:0;background:var(--field);color:var(--fg);transition:background-color .35s;
+html{height:100%;background:var(--bg)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);
   font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   -webkit-tap-highlight-color:transparent;overflow:hidden}
-body[data-state="low"]{--field:#2D55F2}
-body[data-state="good"]{--field:#17C47E;--fg:#04170D;--fg2:rgba(4,23,13,.66);--edge:rgba(4,23,13,.3);--tile:rgba(4,23,13,.1)}
-body[data-state="high"]{--field:#FF7A3D;--fg:#1D0A02;--fg2:rgba(29,10,2,.66);--edge:rgba(29,10,2,.3);--tile:rgba(29,10,2,.1)}
 .app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:16px 20px 20px}
 
 /* 상단 */
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .seg{display:flex;gap:18px}
-.seg button{border:0;background:transparent;color:var(--fg2);font:inherit;font-weight:700;font-size:16px;
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:16px;
   padding:6px 0;cursor:pointer;border-bottom:3px solid transparent}
-.seg button[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--fg)}
-.ref{display:flex;align-items:center;gap:4px;font-size:14px;color:var(--fg2)}
-.ref button{width:36px;height:36px;border-radius:12px;border:0;background:var(--tile);color:var(--fg);font-size:18px;cursor:pointer}
-.ref output{min-width:64px;text-align:center;color:var(--fg);font-weight:600;font-variant-numeric:tabular-nums}
+.seg button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+.ref{display:flex;align-items:center;gap:4px;font-size:14px;color:var(--muted)}
+.ref button{width:36px;height:36px;border-radius:12px;border:0;background:var(--tile);color:var(--ink);font-size:18px;cursor:pointer}
+.ref output{min-width:64px;text-align:center;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 
-/* 중앙: 거대한 음이름 + 흐르는 눈금 테이프 */
-.readout{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0;text-align:center}
-.note{font-weight:800;font-size:clamp(150px,50vw,240px);line-height:.82;letter-spacing:-.06em;margin-left:-.04em;
-  opacity:1;transition:opacity .3s}
-.note sub{font-size:.2em;font-weight:700;color:var(--fg2);vertical-align:baseline;margin-left:6px;letter-spacing:0}
-.readout[data-state="idle"] .note{opacity:.18}
-.status{margin-top:22px;font-size:20px;font-weight:700;min-height:1.4em}
-.tape{position:relative;width:calc(100% + 40px);height:96px;margin:18px -20px 6px;overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}
-.strip{position:absolute;left:50%;top:0;bottom:0;width:0;will-change:transform}
-.strip i{position:absolute;top:50%;width:2px;margin-left:-1px;height:22px;margin-top:-11px;background:var(--fg);opacity:.4;border-radius:1px}
-.strip i.ten{height:38px;margin-top:-19px;opacity:.75}
-.strip b{position:absolute;top:calc(50% + 28px);transform:translateX(-50%);font-size:12px;font-weight:600;color:var(--fg2);font-variant-numeric:tabular-nums}
-.pin{position:absolute;left:50%;top:6px;bottom:6px;width:4px;margin-left:-2px;background:var(--fg);border-radius:2px}
-.hz{font-size:14px;color:var(--fg2);min-height:1.3em;font-variant-numeric:tabular-nums}
+/* 중앙: 머리말 + 줄 */
+.readout{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:18px}
+.readout[data-state="good"]{--sc:var(--good)}
+.head{display:flex;align-items:flex-end;gap:16px;min-height:84px}
+.note{font-weight:800;font-size:76px;line-height:.9;letter-spacing:-.04em;transition:color .2s}
+.note sub{font-size:.3em;font-weight:700;color:var(--muted);vertical-align:baseline;margin-left:3px;letter-spacing:0}
+.readout[data-state="good"] .note{color:var(--good)}
+.readout[data-state="idle"] .note{color:var(--line)}
+.msg{padding-bottom:4px;min-width:0}
+.status{font-size:17px;font-weight:700;min-height:1.4em}
+.readout[data-state="good"] .status{color:var(--good)}
+.readout:not([data-state="good"]):not([data-state="idle"]) .status{color:var(--amber)}
+.hz{font-size:13px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
 
-/* 줄 */
-.strings{display:flex;gap:8px;margin:14px 0 8px}
-.str{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:64px;
-  background:var(--tile);border:0;border-radius:14px;
-  padding:0;cursor:pointer;color:var(--fg);font:inherit;font-weight:800;font-size:22px}
-.str small{font-size:11px;font-weight:700;color:var(--fg2)}
-.str.active{box-shadow:inset 0 0 0 2px var(--fg)}
-.str.locked{background:var(--fg);color:var(--field)}
-.str.locked small{color:var(--field);opacity:.7}
-.str.ring{animation:pulse .5s ease-in-out infinite alternate}
-@keyframes pulse{from{transform:translateY(0)}to{transform:translateY(-4px)}}
-@media (prefers-reduced-motion:reduce){.str.ring{animation:none}body{transition:none}}
+.lanes{flex:1;min-height:0;width:100%;display:block;margin-top:8px}
+.ln{stroke:var(--line);stroke-linecap:round}
+.str{cursor:pointer;outline:none}
+.str .hit{fill:transparent}
+.str .peg{fill:var(--bg);stroke:var(--line);stroke-width:2;transition:fill .15s,stroke .15s}
+.str text{fill:var(--muted);font:700 20px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
+.str .oct{font-size:10px;font-weight:600}
+.str.active .peg{fill:var(--sc);stroke:var(--sc)}
+.str.active text{fill:var(--on-amber)}
+.str.locked .peg{fill:var(--ink);stroke:var(--ink)}
+.str.locked text{fill:var(--bg)}
+.str:focus-visible .peg{stroke:var(--ink);stroke-width:3}
+.bent{fill:none;stroke:var(--sc);stroke-width:5;stroke-linecap:round;transition:stroke .2s}
+.readout[data-state="idle"] .bent{opacity:0}
+.str.ring .peg{animation:pulse .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.str.ring .peg{animation:none}}
 
 .bottom{display:flex;gap:10px;margin-top:10px}
-.bottom button{height:58px;border-radius:16px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;border:0}
-#autoBtn{flex:0 0 36%;background:var(--tile);color:var(--fg)}
-#autoBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--fg)}
-#startBtn{flex:1;background:var(--fg);color:var(--field)}
-#startBtn.on{background:var(--tile);color:var(--fg)}
-.err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:8px}
-button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+.bottom button{height:58px;border-radius:999px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;border:0}
+#autoBtn{flex:0 0 36%;background:var(--tile);color:var(--ink)}
+#autoBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
+#startBtn{flex:1;background:var(--amber);color:var(--on-amber)}
+#startBtn.on{background:var(--ink);color:var(--bg)}
+.err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:8px;color:var(--off)}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -96,14 +96,20 @@ button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
     </div>
   </div>
 
-  <section class="readout" id="readout" data-state="idle" aria-live="polite">
-    <div class="note" id="note">E<sub>2</sub></div>
-    <div class="status" id="status">시작을 누르고 줄을 튕기세요</div>
-    <div class="tape" aria-hidden="true"><div class="strip" id="strip"></div><div class="pin"></div></div>
-    <div class="hz" id="hz"></div>
+  <section class="readout" id="readout" data-state="idle">
+    <div class="head">
+      <div class="note" id="note">E<sub>2</sub></div>
+      <div class="msg" aria-live="polite">
+        <div class="status" id="status">시작을 누르고 줄을 튕기세요</div>
+        <div class="hz" id="hz"></div>
+      </div>
+    </div>
+    <svg class="lanes" id="lanes" viewBox="0 0 350 480" preserveAspectRatio="xMidYMid meet">
+      <g id="lines"></g>
+      <g id="strings"></g>
+      <path class="bent" id="bent"/>
+    </svg>
   </section>
-
-  <div class="strings" id="strings"></div>
 
   <div class="bottom">
     <button id="autoBtn" aria-pressed="true">자동 감지</button>
@@ -136,23 +142,17 @@ let auto = true, locked = 0;
 let ctx=null, analyser=null, stream=null, buf=null, raf=0, wake=null;
 let hist=[], smooth=null, curIdx=-1, lastHeard=0, frame=0;
 
-// 흐르는 눈금 테이프: 바늘 대신 눈금이 고정 핀 아래로 이동, ±50센트
-const PXC=4.5;
-(function(){
-  const t=$('strip');
-  for(let c=-65;c<=65;c+=5){
-    const i=document.createElement('i'); i.style.left=(c*PXC)+'px';
-    if(c%10===0) i.className='ten';
-    t.appendChild(i);
-    if(c%10===0&&Math.abs(c)<=50){ const b=document.createElement('b'); b.style.left=(c*PXC)+'px'; b.textContent=c>0?'+'+c:c; t.appendChild(b); }
-  }
-})();
-
+// 줄 휨: 낮으면 아래로 처지고 높으면 위로 팽팽히 휜다. 맞으면 직선.
 // 관성: 스프링-댐퍼 (감지 로직과 분리, 목표 센트만 받음)
-const stripEl=$('strip');
+const BEND_PX=0.9;
+const bentEl=$('bent');
 const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let nPos=0, nVel=0, nTarget=0, nRaf=0, nLast=0;
-function renderNeedle(){ stripEl.style.transform=`translateX(${(-nPos*PXC).toFixed(1)}px)`; }
+function renderNeedle(){
+  if(curIdx<0){ bentEl.setAttribute('d',''); return; }
+  const y=laneY(curIdx), sag=-nPos*BEND_PX, mx=(LX0+LX1)/2;
+  bentEl.setAttribute('d',`M${LX0} ${y} Q${mx} ${(y+2*sag).toFixed(1)} ${LX1} ${y}`);
+}
 function stepNeedle(t){
   const dt=Math.min(0.05,(t-nLast)/1000||0.016); nLast=t;
   const K=70, C=9.5; // 약한 부족감쇠: 살짝 넘쳤다가 안착
@@ -168,22 +168,30 @@ function setNeedle(c){
   if(reduceMotion.matches){ nPos=nTarget; nVel=0; renderNeedle(); return; }
   if(!nRaf){ nLast=performance.now(); nRaf=requestAnimationFrame(stepNeedle); }
 }
-renderNeedle();
 
 const freqOf = m => a4 * Math.pow(2,(m-69)/12);
 
+const NS='http://www.w3.org/2000/svg', LANE=80, LX0=64, LX1=346;
+const laneY=i=>40+i*LANE;
+const el=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
 function renderStrings(){
-  const box=$('strings'); box.innerHTML='';
-  TUNINGS[inst].strings.forEach((s,i)=>{
-    const b=document.createElement('button');
-    b.className='str';
-    b.setAttribute('aria-label',`${s.n}${s.o} 줄`);
-    b.innerHTML=`${s.n}<small>${s.o}</small>`;
-    b.onclick=()=>{ auto=false; locked=i; syncAuto(); setActive(i); };
-    box.appendChild(b);
+  const box=$('strings'), lines=$('lines'); box.textContent=''; lines.textContent='';
+  const list=TUNINGS[inst].strings;
+  $('lanes').setAttribute('viewBox',`0 0 350 ${list.length*LANE}`);
+  list.forEach((s,i)=>{
+    const y=laneY(i);
+    el('line',{class:'ln',x1:LX0,y1:y,x2:LX1,y2:y,'stroke-width':Math.max(2,5-i*.5)},lines);
+    const g=el('g',{class:'str',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
+    el('rect',{class:'hit',x:0,y:y-LANE/2,width:350,height:LANE},g);
+    el('circle',{class:'peg',cx:32,cy:y,r:26},g);
+    const t=el('text',{x:32,y:y+4},g); t.textContent=s.n;
+    const o=el('text',{class:'oct',x:32,y:y+18},g); o.textContent=s.o;
+    const pick=()=>{ auto=false; locked=i; syncAuto(); setActive(i); };
+    g.addEventListener('click',pick);
+    g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
   });
   document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
-  showNote(TUNINGS[inst].strings[0]);
+  showNote(list[0]);
   setActive(auto?-1:locked);
 }
 function setActive(i){
@@ -192,6 +200,7 @@ function setActive(i){
     el.classList.toggle('active',k===i);
     el.classList.toggle('locked',!auto&&k===locked);
   });
+  renderNeedle();
 }
 function syncAuto(){
   $('autoBtn').setAttribute('aria-pressed',auto);
@@ -271,14 +280,13 @@ function draw(s,c,f){
   const r=Math.round(c);
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
-  document.body.dataset.state = good ? 'good' : (c<0 ? 'low' : 'high');
   $('status').textContent = good ? '맞음' : (r<0 ? `${-r}센트 낮음, 조이세요` : `${r}센트 높음, 푸세요`);
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
   [...$('strings').children].forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
 function idle(){
   if($('readout').dataset.state==='idle') return;
-  $('readout').dataset.state='idle'; document.body.dataset.state='idle';
+  $('readout').dataset.state='idle';
   $('status').textContent='줄을 튕기세요';
   $('hz').textContent='';
   hist=[]; smooth=null; setNeedle(0);
