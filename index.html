@@ -39,8 +39,8 @@ button{font:inherit;color:inherit}
 .tools{display:flex;gap:8px}
 .icon{width:44px;height:44px;border:0;border-radius:50%;background:var(--card);box-shadow:0 1px 2px rgba(15,23,42,.08);
   display:grid;place-items:center;cursor:pointer}
-.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.ic.big{width:44px;height:44px}
+.ic{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.big{width:48px;height:48px}
 .ic.sm{width:18px;height:18px}
 .icon svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .left{display:flex;align-items:center;gap:8px}
@@ -128,8 +128,8 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 </head>
 <body data-run="0">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <symbol id="ic-guitar" viewBox="0 0 48 48"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="8.0" y1="6" x2="8.0" y2="43" stroke-width="2.4"/><line x1="14.4" y1="6" x2="14.4" y2="43" stroke-width="2.0"/><line x1="20.8" y1="6" x2="20.8" y2="43" stroke-width="1.7"/><line x1="27.2" y1="6" x2="27.2" y2="43" stroke-width="1.4"/><line x1="33.6" y1="6" x2="33.6" y2="43" stroke-width="1.0"/><line x1="40.0" y1="6" x2="40.0" y2="43" stroke-width="0.6"/></g><rect x="3" y="15" width="42" height="7" rx="3.5" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="ic-bass" viewBox="0 0 48 48"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="8.0" y1="6" x2="8.0" y2="43" stroke-width="3.6"/><line x1="18.7" y1="6" x2="18.7" y2="43" stroke-width="2.7"/><line x1="29.3" y1="6" x2="29.3" y2="43" stroke-width="1.8"/><line x1="40.0" y1="6" x2="40.0" y2="43" stroke-width="0.9"/></g><rect x="3" y="15" width="42" height="7" rx="3.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="ic-guitar" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="2" width="2" height="20" rx="1"/><rect x="6" y="2" width="2" height="20" rx="1"/><rect x="9" y="2" width="2" height="20" rx="1"/><rect x="12" y="2" width="2" height="20" rx="1"/><rect x="15" y="2" width="2" height="20" rx="1"/><rect x="18" y="2" width="2" height="20" rx="1"/><rect x="1" y="8" width="22" height="3" rx="1.5"/></symbol>
+  <symbol id="ic-bass" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="2" width="3" height="20" rx="1.5"/><rect x="8" y="2" width="3" height="20" rx="1.5"/><rect x="13" y="2" width="3" height="20" rx="1.5"/><rect x="18" y="2" width="3" height="20" rx="1.5"/><rect x="1" y="8" width="22" height="3" rx="1.5"/></symbol>
   <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="currentColor" stroke="none"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"/></symbol>
   <symbol id="ic-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="3" fill="currentColor" stroke="none"/></symbol>
   <symbol id="ic-fork" viewBox="0 0 24 24"><path d="M8 3v8a4 4 0 0 0 8 0V3M12 15v6.5"/></symbol>
@@ -137,7 +137,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 <main class="app">
   <div class="top">
     <div class="left">
-      <button class="icon" id="instBtn" aria-label="악기 선택"><svg class="ic" style="width:28px;height:28px"><use id="instUse" href="#ic-guitar"/></svg></button>
+      <button class="icon" id="instBtn" aria-label="악기 선택"><svg class="ic"><use id="instUse" href="#ic-guitar"/></svg></button>
       <button class="chip" id="autoChip" aria-pressed="true"><i></i><span id="autoTxt">자동 감지</span></button>
     </div>
     <div class="tools">

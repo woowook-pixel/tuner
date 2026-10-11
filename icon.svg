@@ -2,9 +2,9 @@
   <title>튜너 아이콘 원본 (현과 튜닝 막대)</title>
   <!-- 배경: 전면 채움 (maskable 대응). 핵심 도형은 중앙 지름 약 390px 안쪽 -->
   <rect width="512" height="512" fill="#0F172A"/>
-  <!-- 기타 줄 6개: 왼쪽이 굵은 저음현, 맞춰진 줄은 초록 -->
-  <rect x="143.5" y="96" width="13" height="320" rx="6.5" fill="#475569"/><rect x="192.5" y="96" width="11" height="320" rx="5.5" fill="#475569"/><rect x="241.5" y="96" width="9" height="320" rx="4.5" fill="#475569"/><rect x="290.5" y="96" width="7" height="320" rx="3.5" fill="#34D676"/><rect x="339.0" y="96" width="6" height="320" rx="3.0" fill="#475569"/><rect x="387.5" y="96" width="5" height="320" rx="2.5" fill="#475569"/>
+  <!-- 기타 줄 6개: 굵기와 간격을 같게 맞춰 선이 고르게 보이게 함, 맞춰진 줄은 초록 -->
+  <rect x="112" y="100" width="24" height="312" rx="12" fill="#475569"/><rect x="160" y="100" width="24" height="312" rx="12" fill="#475569"/><rect x="208" y="100" width="24" height="312" rx="12" fill="#475569"/><rect x="256" y="100" width="24" height="312" rx="12" fill="#34D676"/><rect x="304" y="100" width="24" height="312" rx="12" fill="#475569"/><rect x="352" y="100" width="24" height="312" rx="12" fill="#475569"/>
   <!-- 튜닝 막대: 줄 위를 가로지르는 인디케이터 -->
-  <rect x="96" y="236" width="320" height="44" rx="22" fill="#34D676"/>
-  <circle cx="256" cy="258" r="10" fill="#0F172A"/>
+  <rect x="80" y="232" width="352" height="48" rx="24" fill="#34D676"/>
+  <circle cx="256" cy="256" r="10" fill="#0F172A"/>
 </svg>
