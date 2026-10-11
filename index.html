@@ -383,7 +383,8 @@ function draw(s,c,f){
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
   $('cents').textContent = good ? '맞음' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
-  $('status').innerHTML = good ? '정확합니다' : (r<0 ? '<span class="ar">▲</span>낮습니다. 조이십시오' : '<span class="ar">▼</span>높습니다. 푸십시오');
+  const near=Math.abs(c)<=10; // 10센트 이내는 "조금만"
+  $('status').innerHTML = good ? '정확합니다' : (r<0 ? `<span class="ar">▲</span>${near?'조금만 ':''}조이십시오` : `<span class="ar">▼</span>${near?'조금만 ':''}푸십시오`);
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
   pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
