@@ -10,15 +10,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="튜너">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#F6F4EF">
+<meta name="theme-color" content="#F4F5F7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F6F4EF; --ink:#1B1D22; --muted:#767B87; --line:#C9CCD4; --tile:#ECE9E1;
-  --amber:#E08A00; --on-amber:#1A1208; --good:#0F9F63; --off:#D9482B;
-  --sc:var(--amber);
+  --bg:#F4F5F7; --card:#FFFFFF; --ink:#0F172A; --muted:#64748B; --line:#E2E5EA; --tile:#EDEFF3;
+  --good:#16A34A; --off:#F97316; --sc:var(--muted);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -28,95 +27,156 @@ html{height:100%;background:var(--bg)}
 body{height:100%;margin:0;background:var(--bg);color:var(--ink);
   font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   -webkit-tap-highlight-color:transparent;overflow:hidden}
-.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:16px 20px 20px}
+button{font:inherit;color:inherit}
+.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:12px 20px 16px}
 
-/* 상단 */
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.seg{display:flex;gap:18px}
-.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:16px;
-  padding:6px 0;cursor:pointer;border-bottom:3px solid transparent}
-.seg button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--amber)}
-.ref{display:flex;align-items:center;gap:4px;font-size:14px;color:var(--muted)}
-.ref button{width:36px;height:36px;border-radius:12px;border:0;background:var(--tile);color:var(--ink);font-size:18px;cursor:pointer}
-.ref output{min-width:64px;text-align:center;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+/* 상단: 모드 표시와 설정만 */
+.top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
+.chip{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:0;border-radius:999px;background:var(--card);
+  box-shadow:0 1px 2px rgba(15,23,42,.08);font-size:14px;font-weight:600;cursor:pointer}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.chip[aria-pressed="true"] i{background:var(--good);box-shadow:0 0 0 4px rgba(22,163,74,.18)}
+.tools{display:flex;gap:8px}
+.icon{width:44px;height:44px;border:0;border-radius:50%;background:var(--card);box-shadow:0 1px 2px rgba(15,23,42,.08);
+  display:grid;place-items:center;cursor:pointer}
+.icon svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#stopBtn{width:auto;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;display:none}
+body[data-run="1"] #stopBtn{display:block}
 
-/* 중앙: 머리말 + 줄 */
-.readout{flex:1;display:flex;flex-direction:column;min-height:0;padding-top:18px}
+/* 중앙: 음 원판 + 높낮이 막대 */
+.readout{display:flex;flex-direction:column;align-items:center;padding-top:10px;--sc:var(--muted)}
+.readout[data-state="near"],.readout[data-state="off"]{--sc:var(--off)}
 .readout[data-state="good"]{--sc:var(--good)}
-.head{display:flex;align-items:flex-end;gap:16px;min-height:84px}
-.note{font-weight:800;font-size:76px;line-height:.9;letter-spacing:-.04em;transition:color .2s}
-.note sub{font-size:.3em;font-weight:700;color:var(--muted);vertical-align:baseline;margin-left:3px;letter-spacing:0}
-.readout[data-state="good"] .note{color:var(--good)}
+.orb{width:min(56vw,220px);aspect-ratio:1;border-radius:50%;background:var(--card);border:8px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 10px 30px rgba(15,23,42,.08);transition:border-color .2s,background .2s,color .2s}
+.readout[data-state="near"] .orb,.readout[data-state="off"] .orb{border-color:var(--off)}
+.readout[data-state="good"] .orb{border-color:var(--good);background:var(--good);color:#fff}
+.note{font-weight:800;font-size:clamp(76px,24vw,100px);line-height:.95;letter-spacing:-.04em}
 .readout[data-state="idle"] .note{color:var(--line)}
-.msg{padding-bottom:4px;min-width:0}
-.status{font-size:17px;font-weight:700;min-height:1.4em}
+.note sub{font-size:.28em;font-weight:700;color:var(--muted);vertical-align:baseline;margin-left:2px;letter-spacing:0}
+.readout[data-state="good"] .note sub{color:rgba(255,255,255,.8)}
+.cents{font-size:18px;font-weight:700;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+.readout[data-state="good"] .cents{color:#fff}
+.msg{margin-top:16px;text-align:center;min-height:56px}
+.status{font-size:20px;font-weight:700;min-height:1.4em}
 .readout[data-state="good"] .status{color:var(--good)}
-.readout:not([data-state="good"]):not([data-state="idle"]) .status{color:var(--amber)}
-.hz{font-size:13px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+.readout[data-state="near"] .status,.readout[data-state="off"] .status{color:var(--off)}
+.hz{margin-top:2px;font-size:13px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+#startBtn{display:none;height:56px;padding:0 32px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 16px rgba(15,23,42,.25)}
+body[data-run="0"] #startBtn{display:inline-block}
+body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
+.err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:6px;color:var(--off)}
 
-.lanes{flex:1;min-height:0;width:100%;display:block;margin-top:8px}
-.ln{stroke:var(--line);stroke-linecap:round}
-.str{cursor:pointer;outline:none}
-.str .hit{fill:transparent}
-.str .peg{fill:var(--bg);stroke:var(--line);stroke-width:2;transition:fill .15s,stroke .15s}
-.str text{fill:var(--muted);font:700 20px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
-.str .oct{font-size:10px;font-weight:600}
-.str.active .peg{fill:var(--sc);stroke:var(--sc)}
-.str.active text{fill:var(--on-amber)}
-.str.locked .peg{fill:var(--ink);stroke:var(--ink)}
-.str.locked text{fill:var(--bg)}
-.str:focus-visible .peg{stroke:var(--ink);stroke-width:3}
-.bent{fill:none;stroke:var(--sc);stroke-width:5;stroke-linecap:round;transition:stroke .2s}
-.readout[data-state="idle"] .bent{opacity:0}
-.str.ring .peg{animation:pulse .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
-@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.08)}}
-@media (prefers-reduced-motion:reduce){.str.ring .peg{animation:none}}
+.bar{position:relative;width:100%;height:48px;margin-top:6px}
+.bar .track{position:absolute;left:0;right:0;top:18px;height:12px;border-radius:6px;background:var(--tile)}
+.bar .zone{position:absolute;top:14px;height:20px;left:46.5%;width:7%;border-radius:6px;background:var(--good);opacity:.25}
+.bar .knob{position:absolute;top:10px;left:50%;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:var(--card);
+  border:5px solid var(--sc);box-shadow:0 2px 6px rgba(15,23,42,.25);will-change:left;transition:border-color .2s}
+.readout[data-state="idle"] .knob{opacity:.5}
+.bar .lab{position:absolute;top:34px;font-size:12px;font-weight:600;color:var(--muted)}
 
-.bottom{display:flex;gap:10px;margin-top:10px}
-.bottom button{height:58px;border-radius:999px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;border:0}
-#autoBtn{flex:0 0 36%;background:var(--tile);color:var(--ink)}
-#autoBtn[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
-#startBtn{flex:1;background:var(--amber);color:var(--on-amber)}
-#startBtn.on{background:var(--ink);color:var(--bg)}
-.err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:8px;color:var(--off)}
+/* 하단: 헤드스톡 (탭하면 그 줄로 고정) */
+.stock{flex:1;min-height:0;width:100%;display:block;margin-top:6px}
+.hd{fill:var(--card);stroke:var(--line);stroke-width:2}
+.stem{stroke:var(--line);stroke-width:6;stroke-linecap:round}
+.post{fill:var(--tile)}
+.peg{cursor:pointer;outline:none}
+.peg .hit{fill:transparent}
+.peg .pc{fill:var(--card);stroke:var(--line);stroke-width:3;transition:fill .15s,stroke .15s}
+.peg text{fill:var(--ink);font:800 22px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
+.peg .oc{font-size:11px;font-weight:700;fill:var(--muted)}
+.peg.active .pc{stroke:var(--sc);fill:var(--card);stroke-width:5}
+.readout[data-state="near"] ~ .stock .peg.active .pc,.readout[data-state="off"] ~ .stock .peg.active .pc{stroke:var(--off)}
+.readout[data-state="good"] ~ .stock .peg.active .pc{fill:var(--good);stroke:var(--good)}
+.readout[data-state="good"] ~ .stock .peg.active text{fill:#fff}
+.peg.locked .pc{fill:var(--ink);stroke:var(--ink)}
+.peg.locked text{fill:#fff}
+.peg.locked .oc{fill:rgba(255,255,255,.7)}
+.peg:focus-visible .pc{stroke:var(--ink);stroke-width:5}
+.peg.ring .pc{animation:pulse .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.07)}}
+.hint{text-align:center;font-size:12px;color:var(--muted);margin-top:2px}
+@media (prefers-reduced-motion:reduce){.peg.ring .pc{animation:none}.orb{transition:none}}
+
+/* 설정 시트 */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.scrim[hidden]{display:none}
+.sheet{width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet h2{margin:0 0 14px;font-size:18px}
+.sheet h3{margin:20px 0 4px;font-size:14px;color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{height:64px;border:2px solid var(--line);border-radius:16px;background:var(--card);font-size:16px;font-weight:700;cursor:pointer}
+.opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.opt small{display:block;font-size:12px;font-weight:500;opacity:.7}
+.refrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.refrow p{margin:0;font-size:13px;line-height:1.5;color:var(--muted);flex:1}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:44px;height:44px;border:0;border-radius:50%;background:var(--tile);font-size:22px;cursor:pointer}
+.step output{min-width:72px;text-align:center;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.done{width:100%;height:52px;margin-top:22px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
 button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 </style>
 </head>
-<body>
+<body data-run="0">
 <main class="app">
   <div class="top">
-    <div class="seg" role="group" aria-label="악기">
-      <button data-inst="guitar" aria-pressed="true">기타</button>
-      <button data-inst="bass" aria-pressed="false">베이스</button>
-    </div>
-    <div class="ref" aria-label="기준음 A4">
-      <button id="refDown" aria-label="기준음 낮추기">−</button>
-      <output id="refVal">440Hz</output>
-      <button id="refUp" aria-label="기준음 높이기">+</button>
+    <button class="chip" id="autoChip" aria-pressed="true"><i></i><span id="autoTxt">자동 감지</span></button>
+    <div class="tools">
+      <button class="icon" id="stopBtn" aria-label="정지">정지</button>
+      <button class="icon" id="gearBtn" aria-label="설정">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
     </div>
   </div>
 
   <section class="readout" id="readout" data-state="idle">
-    <div class="head">
+    <div class="orb">
       <div class="note" id="note">E<sub>2</sub></div>
-      <div class="msg" aria-live="polite">
-        <div class="status" id="status">시작을 누르고 줄을 튕기세요</div>
-        <div class="hz" id="hz"></div>
-      </div>
+      <div class="cents" id="cents"></div>
     </div>
-    <svg class="lanes" id="lanes" viewBox="0 0 350 480" preserveAspectRatio="xMidYMid meet">
-      <g id="lines"></g>
-      <g id="strings"></g>
-      <path class="bent" id="bent"/>
-    </svg>
+    <div class="msg" aria-live="polite">
+      <button id="startBtn">마이크 켜고 시작</button>
+      <div class="status" id="status">줄을 튕기세요</div>
+      <div class="hz" id="hz"></div>
+    </div>
+    <div class="bar" aria-hidden="true">
+      <div class="track"></div><div class="zone"></div><div class="knob" id="knob"></div>
+      <span class="lab" style="left:0">낮음</span><span class="lab" style="left:50%;transform:translateX(-50%)">맞음</span><span class="lab" style="right:0">높음</span>
+    </div>
+    <div class="err" id="err"></div>
   </section>
 
-  <div class="bottom">
-    <button id="autoBtn" aria-pressed="true">자동 감지</button>
-    <button id="startBtn">시작</button>
-  </div>
-  <div class="err" id="err"></div>
+  <svg class="stock" id="stock" viewBox="0 0 320 330" preserveAspectRatio="xMidYMid meet" role="group" aria-label="줄 선택 (탭하면 그 줄로 고정)">
+    <g id="deco"></g>
+    <g id="pegs"></g>
+  </svg>
+  <div class="hint" id="hint">줄을 탭하면 그 줄로 고정됩니다</div>
 </main>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="설정">
+    <div class="grab"></div>
+    <h2>설정</h2>
+    <h3>악기</h3>
+    <div class="opts">
+      <button class="opt" data-inst="guitar" aria-pressed="true">기타<small>6현 E A D G B E</small></button>
+      <button class="opt" data-inst="bass" aria-pressed="false">베이스<small>4현 E A D G</small></button>
+    </div>
+    <h3>기준음 (A4)</h3>
+    <div class="refrow">
+      <p>피아노 등 다른 악기와 음높이를 맞출 때만 바꿉니다. 보통은 440Hz 그대로 두면 됩니다.</p>
+      <div class="step">
+        <button id="refDown" aria-label="기준음 낮추기">−</button>
+        <output id="refVal">440Hz</output>
+        <button id="refUp" aria-label="기준음 높이기">+</button>
+      </div>
+    </div>
+    <button class="done" id="doneBtn">완료</button>
+  </div>
+</div>
 
 <script>
 const TUNINGS = {
@@ -126,6 +186,8 @@ const TUNINGS = {
   bass: { minF: 35, maxF: 120, strings: [
     {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
 };
+// 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호
+const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[1,0],R:[2,3]} };
 const IN_TUNE = 3;      // ±센트
 const GATE_RMS = 0.008; // 이하 무음 처리
 const HOLD_MS = 900;
@@ -141,18 +203,13 @@ let a4 = store.get('a4',440);
 let auto = true, locked = 0;
 let ctx=null, analyser=null, stream=null, buf=null, raf=0, wake=null;
 let hist=[], smooth=null, curIdx=-1, lastHeard=0, frame=0;
+let pegEls=[];
 
-// 줄 휨: 낮으면 아래로 처지고 높으면 위로 팽팽히 휜다. 맞으면 직선.
-// 관성: 스프링-댐퍼 (감지 로직과 분리, 목표 센트만 받음)
-const BEND_PX=0.9;
-const bentEl=$('bent');
+// 높낮이 막대의 손잡이: 스프링-댐퍼 관성 (감지 로직과 분리, 목표 센트만 받음)
+const knobEl=$('knob');
 const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let nPos=0, nVel=0, nTarget=0, nRaf=0, nLast=0;
-function renderNeedle(){
-  if(curIdx<0){ bentEl.setAttribute('d',''); return; }
-  const y=laneY(curIdx), sag=-nPos*BEND_PX, mx=(LX0+LX1)/2;
-  bentEl.setAttribute('d',`M${LX0} ${y} Q${mx} ${(y+2*sag).toFixed(1)} ${LX1} ${y}`);
-}
+function renderNeedle(){ knobEl.style.left=(50+nPos*0.9).toFixed(2)+'%'; }
 function stepNeedle(t){
   const dt=Math.min(0.05,(t-nLast)/1000||0.016); nLast=t;
   const K=70, C=9.5; // 약한 부족감쇠: 살짝 넘쳤다가 안착
@@ -168,43 +225,55 @@ function setNeedle(c){
   if(reduceMotion.matches){ nPos=nTarget; nVel=0; renderNeedle(); return; }
   if(!nRaf){ nLast=performance.now(); nRaf=requestAnimationFrame(stepNeedle); }
 }
+renderNeedle();
 
 const freqOf = m => a4 * Math.pow(2,(m-69)/12);
 
-const NS='http://www.w3.org/2000/svg', LANE=80, LX0=64, LX1=346;
-const laneY=i=>40+i*LANE;
+// 헤드스톡 그리기
+const NS='http://www.w3.org/2000/svg';
 const el=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
 function renderStrings(){
-  const box=$('strings'), lines=$('lines'); box.textContent=''; lines.textContent='';
-  const list=TUNINGS[inst].strings;
-  $('lanes').setAttribute('viewBox',`0 0 350 ${list.length*LANE}`);
-  list.forEach((s,i)=>{
-    const y=laneY(i);
-    el('line',{class:'ln',x1:LX0,y1:y,x2:LX1,y2:y,'stroke-width':Math.max(2,5-i*.5)},lines);
-    const g=el('g',{class:'str',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
-    el('rect',{class:'hit',x:0,y:y-LANE/2,width:350,height:LANE},g);
-    el('circle',{class:'peg',cx:32,cy:y,r:26},g);
-    const t=el('text',{x:32,y:y+4},g); t.textContent=s.n;
-    const o=el('text',{class:'oct',x:32,y:y+18},g); o.textContent=s.o;
-    const pick=()=>{ auto=false; locked=i; syncAuto(); setActive(i); };
-    g.addEventListener('click',pick);
-    g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
+  const deco=$('deco'), box=$('pegs'); deco.textContent=''; box.textContent=''; pegEls=[];
+  el('path',{class:'hd',d:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z'},deco);
+  const P=PEGS[inst], list=TUNINGS[inst].strings;
+  const ys = n => n===3 ? [62,128,194] : [90,160];
+  [['L',44,112],['R',276,208]].forEach(([side,px,hx])=>{
+    const idxs=P[side], yy=ys(idxs.length);
+    idxs.forEach((si,k)=>{
+      const y=yy[k], s=list[si];
+      el('line',{class:'stem',x1:hx,y1:y,x2:px,y2:y},deco);
+      el('circle',{class:'post',cx:side==='L'?132:188,cy:y,r:8},deco);
+      const g=el('g',{class:'peg',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
+      el('circle',{class:'hit',cx:px,cy:y,r:34},g);
+      el('circle',{class:'pc',cx:px,cy:y,r:27},g);
+      const t=el('text',{x:px,y:y+2},g); t.textContent=s.n;
+      const o=el('text',{class:'oc',x:px,y:y+16},g); o.textContent=s.o;
+      const pick=()=>{
+        if(!auto&&locked===si){ auto=true; syncAuto(); setActive(-1); return; }
+        auto=false; locked=si; showNote(s); syncAuto(); setActive(si);
+      };
+      g.addEventListener('click',pick);
+      g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
+      pegEls[si]=g;
+    });
   });
-  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
+  document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
   showNote(list[0]);
+  syncAuto();
   setActive(auto?-1:locked);
 }
 function setActive(i){
   curIdx=i;
-  [...$('strings').children].forEach((el,k)=>{
+  pegEls.forEach((el,k)=>{
     el.classList.toggle('active',k===i);
     el.classList.toggle('locked',!auto&&k===locked);
   });
-  renderNeedle();
 }
 function syncAuto(){
-  $('autoBtn').setAttribute('aria-pressed',auto);
-  $('autoBtn').textContent = auto ? '자동 감지' : '수동 (자동으로 전환)';
+  const s=TUNINGS[inst].strings[locked];
+  $('autoChip').setAttribute('aria-pressed',auto);
+  $('autoTxt').textContent = auto ? '자동 감지' : `${s.n}${s.o} 줄 고정 (탭하면 자동)`;
+  $('hint').textContent = auto ? '줄을 탭하면 그 줄로 고정됩니다' : '고정한 줄을 다시 탭하면 자동 감지로 돌아갑니다';
   setActive(auto?curIdx:locked);
 }
 function showNote(s){ $('note').innerHTML=`${s.n}<sub>${s.o}</sub>`; }
@@ -213,13 +282,21 @@ function setRef(v){
   $('refVal').textContent=a4+'Hz';
 }
 
-document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
-  inst=b.dataset.inst; store.set('inst',inst); locked=0; smooth=null; hist=[]; renderStrings();
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+  inst=b.dataset.inst; store.set('inst',inst); locked=0; smooth=null; hist=[]; auto=true; renderStrings();
 });
 $('refDown').onclick=()=>setRef(a4-1);
 $('refUp').onclick=()=>setRef(a4+1);
-$('autoBtn').onclick=()=>{ auto=!auto; syncAuto(); };
-$('startBtn').onclick=()=> ctx ? stop() : start();
+$('autoChip').onclick=()=>{ if(!auto){ auto=true; syncAuto(); setActive(-1); } };
+$('startBtn').onclick=start;
+$('stopBtn').onclick=stop;
+const sheet=$('scrim');
+const openSheet=()=>{ sheet.hidden=false; $('doneBtn').focus(); };
+const closeSheet=()=>{ sheet.hidden=true; $('gearBtn').focus(); };
+$('gearBtn').onclick=openSheet;
+$('doneBtn').onclick=closeSheet;
+sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!sheet.hidden) closeSheet(); });
 
 // YIN 음정 감지
 function yin(x, sr, minF, maxF){
@@ -280,17 +357,19 @@ function draw(s,c,f){
   const r=Math.round(c);
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
-  $('status').textContent = good ? '맞음' : (r<0 ? `${-r}센트 낮음, 조이세요` : `${r}센트 높음, 푸세요`);
+  $('cents').textContent = good ? '맞음' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
+  $('status').textContent = good ? '정확합니다' : (r<0 ? '낮습니다, 조이세요' : '높습니다, 푸세요');
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
-  [...$('strings').children].forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
+  pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
 function idle(){
   if($('readout').dataset.state==='idle') return;
   $('readout').dataset.state='idle';
   $('status').textContent='줄을 튕기세요';
+  $('cents').textContent='';
   $('hz').textContent='';
   hist=[]; smooth=null; setNeedle(0);
-  [...$('strings').children].forEach(el=>el.classList.remove('ring'));
+  pegEls.forEach(el=>el.classList.remove('ring'));
   if(auto) setActive(-1);
 }
 
@@ -310,7 +389,7 @@ async function start(){
   src.connect(analyser);
   buf=new Float32Array(analyser.fftSize);
   try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
-  $('startBtn').textContent='정지'; $('startBtn').classList.add('on');
+  document.body.dataset.run='1';
   $('status').textContent='줄을 튕기세요';
   tick();
 }
@@ -319,8 +398,8 @@ function stop(){
   stream?.getTracks().forEach(t=>t.stop());
   ctx?.close(); ctx=null;
   try{ wake?.release(); }catch(e){} wake=null;
-  $('startBtn').textContent='시작'; $('startBtn').classList.remove('on');
-  idle(); $('status').textContent='시작을 누르고 줄을 튕기세요';
+  document.body.dataset.run='0';
+  idle();
 }
 
 setRef(a4);
