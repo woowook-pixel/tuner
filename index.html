@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#F4F5F7">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F4F5F7; --card:#FFFFFF; --ink:#0F172A; --muted:#64748B; --line:#E2E5EA; --tile:#EDEFF3;
@@ -25,7 +25,7 @@
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%;background:var(--bg)}
 body{height:100%;margin:0;background:var(--bg);color:var(--ink);
-  font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  font-family:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   -webkit-tap-highlight-color:transparent;overflow:hidden}
 button{font:inherit;color:inherit}
 .app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:12px 20px 16px}
@@ -91,7 +91,7 @@ body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
 .peg{cursor:pointer;outline:none}
 .peg .hit{fill:transparent}
 .peg .pc{fill:var(--card);stroke:var(--line);stroke-width:3;transition:fill .15s,stroke .15s}
-.peg text{fill:var(--ink);font:800 22px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
+.peg text{fill:var(--ink);font:800 22px "Gothic A1",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
 .peg .oc{font-size:11px;font-weight:700;fill:var(--muted)}
 .peg.active .pc{stroke:var(--sc);fill:var(--card);stroke-width:5}
 .readout[data-state="near"] ~ .stock .peg.active .pc,.readout[data-state="off"] ~ .stock .peg.active .pc{stroke:var(--off)}
@@ -155,7 +155,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
     </div>
     <div class="msg" aria-live="polite">
       <button id="startBtn"><svg class="ic"><use href="#ic-mic"/></svg>마이크 켜고 시작</button>
-      <div class="status" id="status">줄을 튕기세요</div>
+      <div class="status" id="status">줄을 튕기십시오</div>
       <div class="hz" id="hz"></div>
     </div>
     <div class="bar" aria-hidden="true">
@@ -383,14 +383,14 @@ function draw(s,c,f){
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
   $('cents').textContent = good ? '맞음' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
-  $('status').innerHTML = good ? '정확합니다' : (r<0 ? '<span class="ar">▲</span>낮습니다, 조이세요' : '<span class="ar">▼</span>높습니다, 푸세요');
+  $('status').innerHTML = good ? '정확합니다' : (r<0 ? '<span class="ar">▲</span>낮습니다. 조이십시오' : '<span class="ar">▼</span>높습니다. 푸십시오');
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
   pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
 function idle(){
   if($('readout').dataset.state==='idle') return;
   $('readout').dataset.state='idle';
-  $('status').textContent='줄을 튕기세요';
+  $('status').textContent='줄을 튕기십시오';
   $('cents').textContent='';
   $('hz').textContent='';
   hist=[]; smooth=null; setNeedle(0);
@@ -404,8 +404,8 @@ async function start(){
     stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
   }catch(e){
     $('err').textContent = e && e.name==='NotAllowedError'
-      ? '마이크 권한이 꺼져 있습니다. 브라우저 설정에서 이 페이지의 마이크를 허용한 뒤 다시 시작하세요.'
-      : '마이크를 열 수 없습니다. 다른 앱이 마이크를 쓰고 있지 않은지 확인하세요.';
+      ? '마이크 권한이 꺼져 있습니다. 브라우저 설정에서 이 페이지의 마이크를 허용한 뒤 다시 시작하십시오.'
+      : '마이크를 열 수 없습니다. 다른 앱이 마이크를 쓰고 있지 않은지 확인하십시오.';
     return;
   }
   ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -415,7 +415,7 @@ async function start(){
   buf=new Float32Array(analyser.fftSize);
   try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
   document.body.dataset.run='1';
-  $('status').textContent='줄을 튕기세요';
+  $('status').textContent='줄을 튕기십시오';
   tick();
 }
 function stop(){
