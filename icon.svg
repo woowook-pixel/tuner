@@ -1,74 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <title>튜너 아이콘 원본 (기타 헤드와 페그)</title>
   <defs>
-    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
-      <stop offset="0" stop-color="#3A271B"/>
-      <stop offset="1" stop-color="#1B110B"/>
-    </radialGradient>
-    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#B8782F"/>
-      <stop offset=".45" stop-color="#E2AE62"/>
-      <stop offset="1" stop-color="#A9672A"/>
-    </linearGradient>
-    <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#F0D690"/>
-      <stop offset="1" stop-color="#B58A38"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#232733"/>
+      <stop offset="1" stop-color="#0C0D10"/>
     </linearGradient>
   </defs>
 
   <!-- 배경: 전면 채움 (maskable 대응). 핵심 도형은 중앙 지름 약 410px 안쪽 -->
   <rect width="512" height="512" fill="url(#bg)"/>
 
-  <!-- 페그 (좌우 3개씩) -->
-  <g stroke-linecap="round">
-    <g stroke="#8E6A2E" stroke-width="10">
-      <line x1="200" y1="150" x2="168" y2="150"/>
-      <line x1="200" y1="205" x2="168" y2="205"/>
-      <line x1="200" y1="260" x2="168" y2="260"/>
-      <line x1="312" y1="150" x2="344" y2="150"/>
-      <line x1="312" y1="205" x2="344" y2="205"/>
-      <line x1="312" y1="260" x2="344" y2="260"/>
-    </g>
+  <!-- 페그 -->
+  <g stroke="#3DDC97" stroke-width="12" stroke-linecap="round" opacity=".55">
+    <line x1="200" y1="150" x2="150" y2="150"/>
+    <line x1="200" y1="205" x2="150" y2="205"/>
+    <line x1="200" y1="260" x2="150" y2="260"/>
+    <line x1="312" y1="150" x2="362" y2="150"/>
+    <line x1="312" y1="205" x2="362" y2="205"/>
+    <line x1="312" y1="260" x2="362" y2="260"/>
   </g>
-  <g fill="url(#brass)" stroke="#6E4E1C" stroke-width="3">
-    <rect x="118" y="130" width="52" height="40" rx="16"/>
-    <rect x="118" y="185" width="52" height="40" rx="16"/>
-    <rect x="118" y="240" width="52" height="40" rx="16"/>
-    <rect x="342" y="130" width="52" height="40" rx="16"/>
-    <rect x="342" y="185" width="52" height="40" rx="16"/>
-    <rect x="342" y="240" width="52" height="40" rx="16"/>
+  <g fill="#3DDC97">
+    <circle cx="140" cy="150" r="24"/>
+    <circle cx="140" cy="205" r="24"/>
+    <circle cx="140" cy="260" r="24"/>
+    <circle cx="372" cy="150" r="24"/>
+    <circle cx="372" cy="205" r="24"/>
+    <circle cx="372" cy="260" r="24"/>
   </g>
 
   <!-- 헤드스톡과 넥 -->
-  <path d="M224 424 L224 340 C224 300 200 282 200 240 L200 150 Q200 106 256 106 Q312 106 312 150 L312 240 C312 282 288 300 288 340 L288 424 Z"
-        fill="url(#wood)" stroke="#5A3A18" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M224 424 L224 340 C224 300 200 282 200 240 L200 150 Q200 106 256 106 Q312 106 312 150 L312 240 C312 282 288 300 288 340 L288 424 Z" fill="#F2F3F5"/>
 
-  <!-- 너트 -->
-  <rect x="224" y="334" width="64" height="12" rx="3" fill="#F3EAD2" stroke="#8A7B5C" stroke-width="2"/>
-
-  <!-- 현 -->
-  <g stroke="#F3EAD2" stroke-width="3" stroke-linecap="round" opacity=".92">
-    <line x1="231" y1="340" x2="231" y2="424"/>
-    <line x1="242" y1="340" x2="242" y2="424"/>
-    <line x1="253" y1="340" x2="253" y2="424"/>
-    <line x1="264" y1="340" x2="264" y2="424"/>
-    <line x1="275" y1="340" x2="275" y2="424"/>
-    <line x1="284" y1="340" x2="284" y2="424"/>
-    <line x1="231" y1="340" x2="222" y2="260"/>
-    <line x1="242" y1="340" x2="222" y2="205"/>
-    <line x1="253" y1="340" x2="222" y2="150"/>
-    <line x1="264" y1="340" x2="290" y2="150"/>
-    <line x1="275" y1="340" x2="290" y2="205"/>
-    <line x1="284" y1="340" x2="290" y2="260"/>
-  </g>
-
-  <!-- 페그 포스트 -->
-  <g fill="#F0D690" stroke="#6E4E1C" stroke-width="3">
-    <circle cx="222" cy="150" r="9"/>
-    <circle cx="222" cy="205" r="9"/>
-    <circle cx="222" cy="260" r="9"/>
-    <circle cx="290" cy="150" r="9"/>
-    <circle cx="290" cy="205" r="9"/>
-    <circle cx="290" cy="260" r="9"/>
+  <!-- 너트와 포스트 구멍 -->
+  <rect x="224" y="334" width="64" height="8" fill="#0C0D10" opacity=".85"/>
+  <g fill="#0C0D10">
+    <circle cx="228" cy="150" r="9"/>
+    <circle cx="228" cy="205" r="9"/>
+    <circle cx="228" cy="260" r="9"/>
+    <circle cx="284" cy="150" r="9"/>
+    <circle cx="284" cy="205" r="9"/>
+    <circle cx="284" cy="260" r="9"/>
   </g>
 </svg>
