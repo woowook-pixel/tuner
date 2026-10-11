@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>튜너</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="튜너">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#24170F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E4E7DF; --surface:#D3D8CC; --ink:#2B2420; --muted:#6B6259;
+  --brass:#8A6A2C; --good:#3E8A47; --off:#B0456A; --line:#9AA090;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#24170F; --surface:#33231A; --ink:#EFE4D0; --muted:#A8977F;
+    --brass:#C9A45C; --good:#8CC084; --off:#D3708C; --line:#5A4535;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#24170F; --surface:#33231A; --ink:#EFE4D0; --muted:#A8977F;
+  --brass:#C9A45C; --good:#8CC084; --off:#D3708C; --line:#5A4535;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  -webkit-tap-highlight-color:transparent}
+.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:16px 20px 20px}
+
+/* 상단 */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.seg{display:flex;background:var(--surface);border-radius:999px;padding:4px}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;
+  padding:8px 16px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.ref{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.ref button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
+  background:transparent;color:var(--ink);font-size:18px;cursor:pointer}
+.ref output{min-width:64px;text-align:center;color:var(--ink);font-weight:600}
+
+/* 중앙 판독부 */
+.readout{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0}
+.note{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;
+  font-size:clamp(120px,38vw,180px);line-height:.9;letter-spacing:-.02em;
+  color:var(--ink);transition:color .15s}
+.note sub{font-size:.28em;font-weight:600;color:var(--muted);vertical-align:baseline;margin-left:4px}
+.readout[data-state="good"] .note{color:var(--good)}
+.readout[data-state="off"] .note{color:var(--off)}
+.readout[data-state="idle"] .note{color:var(--line)}
+
+.strip{position:relative;width:100%;height:56px;margin:28px 0 12px}
+.ticks{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center}
+.ticks i{width:2px;height:14px;background:var(--line);border-radius:1px}
+.ticks i.mid{height:40px;background:var(--brass);width:3px}
+.ticks i.ten{height:24px}
+.zone{position:absolute;top:8px;bottom:8px;left:calc(50% - 3%);width:6%;
+  background:var(--good);opacity:.18;border-radius:4px}
+.marker{position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;
+  background:var(--ink);border-radius:3px;transition:left .08s linear,background .15s}
+.readout[data-state="good"] .marker{background:var(--good)}
+.readout[data-state="off"] .marker{background:var(--off)}
+.readout[data-state="idle"] .marker{opacity:0}
+.scale{width:100%;display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.status{margin-top:16px;font-size:18px;font-weight:600;min-height:1.4em}
+.hz{font-size:14px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
+
+/* 줄 */
+.strings{display:flex;justify-content:space-around;align-items:flex-end;height:120px;margin-bottom:8px}
+.str{display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:0;
+  padding:0;cursor:pointer;color:var(--ink);font:inherit}
+.str .wire{width:var(--g);height:64px;background:var(--line);border-radius:2px;transition:background .15s}
+.str .peg{width:48px;height:48px;border-radius:50%;border:2px solid var(--line);
+  display:grid;place-items:center;font-weight:600;font-size:17px}
+.str .peg small{font-size:10px;color:var(--muted);margin-left:1px}
+.str.active .wire{background:var(--brass)}
+.str.active .peg{border-color:var(--brass);background:var(--surface)}
+.str.locked .peg{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.str.locked .peg small{color:var(--bg)}
+.str.ring .wire{animation:ring .09s linear infinite alternate}
+@keyframes ring{from{transform:translateX(-1px)}to{transform:translateX(1px)}}
+@media (prefers-reduced-motion:reduce){.str.ring .wire{animation:none}.marker{transition:none}}
+
+.bottom{display:flex;gap:12px;margin-top:12px}
+.bottom button{flex:1;height:52px;border-radius:14px;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
+#autoBtn{background:transparent;color:var(--ink);border:1px solid var(--line)}
+#autoBtn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+#startBtn{background:var(--ink);color:var(--bg);border:0}
+#startBtn.on{background:var(--surface);color:var(--ink)}
+.err{font-size:14px;color:var(--off);text-align:center;min-height:1.2em;margin-top:8px}
+button:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div class="seg" role="group" aria-label="악기">
+      <button data-inst="guitar" aria-pressed="true">기타</button>
+      <button data-inst="bass" aria-pressed="false">베이스</button>
+    </div>
+    <div class="ref" aria-label="기준음 A4">
+      <button id="refDown" aria-label="기준음 낮추기">−</button>
+      <output id="refVal">440Hz</output>
+      <button id="refUp" aria-label="기준음 높이기">+</button>
+    </div>
+  </div>
+
+  <section class="readout" id="readout" data-state="idle" aria-live="polite">
+    <div class="note" id="note">E<sub>2</sub></div>
+    <div class="strip" aria-hidden="true">
+      <div class="zone"></div>
+      <div class="ticks" id="ticks"></div>
+      <div class="marker" id="marker"></div>
+    </div>
+    <div class="scale" aria-hidden="true"><span>−50</span><span>0</span><span>+50</span></div>
+    <div class="status" id="status">시작을 누르고 줄을 튕기세요</div>
+    <div class="hz" id="hz"></div>
+  </section>
+
+  <div class="strings" id="strings"></div>
+
+  <div class="bottom">
+    <button id="autoBtn" aria-pressed="true">자동 감지</button>
+    <button id="startBtn">시작</button>
+  </div>
+  <div class="err" id="err"></div>
+</main>
+
+<script>
+const TUNINGS = {
+  guitar: { minF: 70, maxF: 400, strings: [
+    {n:'E',o:2,m:40,g:5},{n:'A',o:2,m:45,g:4},{n:'D',o:3,m:50,g:4},
+    {n:'G',o:3,m:55,g:3},{n:'B',o:3,m:59,g:2},{n:'E',o:4,m:64,g:2}]},
+  bass: { minF: 35, maxF: 120, strings: [
+    {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
+};
+const IN_TUNE = 3;      // ±센트
+const GATE_RMS = 0.008; // 이하 무음 처리
+const HOLD_MS = 900;
+
+const $ = id => document.getElementById(id);
+const store = {
+  get(k,d){ try{ const v = localStorage.getItem('tuner.'+k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{ localStorage.setItem('tuner.'+k, JSON.stringify(v)); }catch(e){} }
+};
+
+let inst = store.get('inst','guitar');
+let a4 = store.get('a4',440);
+let auto = true, locked = 0;
+let ctx=null, analyser=null, stream=null, buf=null, raf=0, wake=null;
+let hist=[], smooth=null, curIdx=-1, lastHeard=0, frame=0;
+
+// 눈금
+(function(){
+  const t=$('ticks');
+  for(let c=-50;c<=50;c+=5){
+    const i=document.createElement('i');
+    if(c===0) i.className='mid'; else if(c%10===0) i.className='ten';
+    t.appendChild(i);
+  }
+})();
+
+const freqOf = m => a4 * Math.pow(2,(m-69)/12);
+
+function renderStrings(){
+  const box=$('strings'); box.innerHTML='';
+  TUNINGS[inst].strings.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='str'; b.style.setProperty('--g',s.g+'px');
+    b.setAttribute('aria-label',`${s.n}${s.o} 줄`);
+    b.innerHTML=`<span class="wire"></span><span class="peg">${s.n}<small>${s.o}</small></span>`;
+    b.onclick=()=>{ auto=false; locked=i; syncAuto(); setActive(i); };
+    box.appendChild(b);
+  });
+  document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
+  showNote(TUNINGS[inst].strings[0]);
+  setActive(auto?-1:locked);
+}
+function setActive(i){
+  curIdx=i;
+  [...$('strings').children].forEach((el,k)=>{
+    el.classList.toggle('active',k===i);
+    el.classList.toggle('locked',!auto&&k===locked);
+  });
+}
+function syncAuto(){
+  $('autoBtn').setAttribute('aria-pressed',auto);
+  $('autoBtn').textContent = auto ? '자동 감지' : '수동 (자동으로 전환)';
+  setActive(auto?curIdx:locked);
+}
+function showNote(s){ $('note').innerHTML=`${s.n}<sub>${s.o}</sub>`; }
+function setRef(v){
+  a4=Math.max(430,Math.min(450,v)); store.set('a4',a4);
+  $('refVal').textContent=a4+'Hz';
+}
+
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
+  inst=b.dataset.inst; store.set('inst',inst); locked=0; smooth=null; hist=[]; renderStrings();
+});
+$('refDown').onclick=()=>setRef(a4-1);
+$('refUp').onclick=()=>setRef(a4+1);
+$('autoBtn').onclick=()=>{ auto=!auto; syncAuto(); };
+$('startBtn').onclick=()=> ctx ? stop() : start();
+
+// YIN 음정 감지
+function yin(x, sr, minF, maxF){
+  const maxTau=Math.min(Math.floor(sr/minF), x.length>>1);
+  const minTau=Math.max(2,Math.floor(sr/maxF));
+  const W=x.length-maxTau;
+  const d=new Float32Array(maxTau+1);
+  for(let tau=1;tau<=maxTau;tau++){
+    let s=0;
+    for(let j=0;j<W;j++){ const v=x[j]-x[j+tau]; s+=v*v; }
+    d[tau]=s;
+  }
+  // 누적 평균 정규화
+  let run=0; d[0]=1;
+  for(let tau=1;tau<=maxTau;tau++){ run+=d[tau]; d[tau]=run?d[tau]*tau/run:1; }
+  let tau=-1;
+  for(let t=minTau;t<maxTau;t++){
+    if(d[t]<0.15){ while(t+1<maxTau&&d[t+1]<d[t]) t++; tau=t; break; }
+  }
+  if(tau<0) return -1;
+  const a=d[tau-1], b=d[tau], c=d[tau+1];
+  const den=a+c-2*b;
+  const better = den ? tau + (a-c)/(2*den) : tau;
+  return sr/better;
+}
+
+function tick(){
+  raf=requestAnimationFrame(tick);
+  if((frame++)&1) return; // 약 30fps
+  analyser.getFloatTimeDomainData(buf);
+  let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i];
+  rms=Math.sqrt(rms/buf.length);
+  const now=performance.now();
+  const T=TUNINGS[inst];
+  let f=-1;
+  if(rms>GATE_RMS) f=yin(buf,ctx.sampleRate,T.minF,T.maxF);
+  if(f>0){
+    hist.push(f); if(hist.length>5) hist.shift();
+    const med=[...hist].sort((p,q)=>p-q)[hist.length>>1];
+    let idx=locked;
+    if(auto){
+      let best=1e9;
+      T.strings.forEach((s,i)=>{ const c=Math.abs(1200*Math.log2(med/freqOf(s.m))); if(c<best){best=c;idx=i;} });
+    }
+    if(idx!==curIdx){ smooth=null; setActive(idx); }
+    const s=T.strings[idx];
+    const cents=1200*Math.log2(med/freqOf(s.m));
+    smooth = smooth===null ? cents : smooth*0.7+cents*0.3;
+    lastHeard=now;
+    draw(s,smooth,med);
+  } else if(now-lastHeard>HOLD_MS){
+    idle();
+  }
+}
+function draw(s,c,f){
+  showNote(s);
+  const cc=Math.max(-50,Math.min(50,c));
+  $('marker').style.left=(50+cc)+'%';
+  const r=Math.round(c);
+  const good=Math.abs(c)<=IN_TUNE;
+  $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
+  $('status').textContent = good ? '맞음' : (r<0 ? `${-r}센트 낮음, 조이세요` : `${r}센트 높음, 푸세요`);
+  $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
+  [...$('strings').children].forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
+}
+function idle(){
+  if($('readout').dataset.state==='idle') return;
+  $('readout').dataset.state='idle';
+  $('status').textContent='줄을 튕기세요';
+  $('hz').textContent='';
+  hist=[]; smooth=null;
+  [...$('strings').children].forEach(el=>el.classList.remove('ring'));
+  if(auto) setActive(-1);
+}
+
+async function start(){
+  $('err').textContent='';
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+  }catch(e){
+    $('err').textContent = e && e.name==='NotAllowedError'
+      ? '마이크 권한이 꺼져 있습니다. 브라우저 설정에서 이 페이지의 마이크를 허용한 뒤 다시 시작하세요.'
+      : '마이크를 열 수 없습니다. 다른 앱이 마이크를 쓰고 있지 않은지 확인하세요.';
+    return;
+  }
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const src=ctx.createMediaStreamSource(stream);
+  analyser=ctx.createAnalyser(); analyser.fftSize=4096;
+  src.connect(analyser);
+  buf=new Float32Array(analyser.fftSize);
+  try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
+  $('startBtn').textContent='정지'; $('startBtn').classList.add('on');
+  $('status').textContent='줄을 튕기세요';
+  tick();
+}
+function stop(){
+  cancelAnimationFrame(raf);
+  stream?.getTracks().forEach(t=>t.stop());
+  ctx?.close(); ctx=null;
+  try{ wake?.release(); }catch(e){} wake=null;
+  $('startBtn').textContent='시작'; $('startBtn').classList.remove('on');
+  idle(); $('status').textContent='시작을 누르고 줄을 튕기세요';
+}
+
+setRef(a4);
+renderStrings();
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+</script>
+</body>
+</html>
