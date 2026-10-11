@@ -64,7 +64,6 @@ body[data-run="1"] #stopBtn{display:inline-flex}
 .cents{font-size:18px;font-weight:700;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
 .readout[data-state="good"] .cents{color:#fff}
 .msg{margin-top:16px;text-align:center;min-height:56px}
-.status .ar{font-size:.8em;margin-right:4px}
 .status{font-size:20px;font-weight:700;min-height:1.4em}
 .readout[data-state="good"] .status{color:var(--good)}
 .readout[data-state="near"] .status,.readout[data-state="off"] .status{color:var(--off)}
@@ -160,7 +159,7 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
     </div>
     <div class="bar" aria-hidden="true">
       <div class="track"></div><div class="zone"></div><div class="knob" id="knob"></div>
-      <span class="lab" style="left:0">낮음</span><span class="lab" style="left:50%;transform:translateX(-50%)">맞음</span><span class="lab" style="right:0">높음</span>
+      <span class="lab" style="left:0">낮음</span><span class="lab" style="left:50%;transform:translateX(-50%)">정확</span><span class="lab" style="right:0">높음</span>
     </div>
     <div class="err" id="err"></div>
   </section>
@@ -382,9 +381,9 @@ function draw(s,c,f){
   const r=Math.round(c);
   const good=Math.abs(c)<=IN_TUNE;
   $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
-  $('cents').textContent = good ? '맞음' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
-  const near=Math.abs(c)<=10; // 10센트 이내는 "조금만"
-  $('status').innerHTML = good ? '정확합니다' : (r<0 ? `<span class="ar">▲</span>${near?'조금만 ':''}조이십시오` : `<span class="ar">▼</span>${near?'조금만 ':''}푸십시오`);
+  $('cents').textContent = good ? '정확' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
+  const near=Math.abs(c)<=10; // 10센트 이내는 "조금"
+  $('status').textContent = good ? '정확' : (r<0 ? `${near?'조금 ':''}낮음` : `${near?'조금 ':''}높음`);
   $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
   pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
 }
