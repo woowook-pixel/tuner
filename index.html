@@ -16,95 +16,42 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <link rel="stylesheet" href="design/tokens.css">
 <style>
-:root{
-  --bg:#F4F5F7; --card:#FFFFFF; --ink:#0F172A; --muted:#64748B; --line:#E2E5EA; --tile:#EDEFF3;
-  --good:#16A34A; --off:#F97316; --sc:var(--muted);
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
-}
-*,*::before,*::after{box-sizing:inherit}
-html{height:100%;background:var(--bg)}
-body{height:100%;margin:0;background:var(--bg);color:var(--ink);
-  font-family:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
-  -webkit-tap-highlight-color:transparent;overflow:hidden}
-button{font:inherit;color:inherit}
-.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;padding:12px 20px 16px}
+/* Pitch: 공통 토큰(design/tokens.css) 위에 얹는 화면 전용 스타일 */
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--pf-white)}
+body{-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;border-radius:0;cursor:pointer}
+.app{max-width:480px;min-height:100vh;margin:0 auto;display:flex;flex-direction:column;
+  /* 토큰의 54px는 상태바 아래 여백. 실제 안전영역에 맞춰 줄인다 */
+  padding-top:max(16px,env(safe-area-inset-top,0px));padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}
+.tools{display:flex;gap:6px}
 
-/* 상단: 모드 표시와 설정만 */
-.top{display:flex;justify-content:space-between;align-items:center;min-height:44px}
-.chip{display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border:0;border-radius:999px;background:var(--card);
-  box-shadow:0 1px 2px rgba(15,23,42,.08);font-size:14px;font-weight:600;cursor:pointer}
-.chip i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
-.chip[aria-pressed="true"] i{background:var(--good);box-shadow:0 0 0 4px rgba(22,163,74,.18)}
-.tools{display:flex;gap:8px}
-.icon{width:44px;height:44px;border:0;border-radius:50%;background:var(--card);box-shadow:0 1px 2px rgba(15,23,42,.08);
-  display:grid;place-items:center;cursor:pointer}
-.ic{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.ic.big{width:48px;height:48px}
-.ic.sm{width:18px;height:18px}
-.icon svg{width:22px;height:22px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.left{display:flex;align-items:center;gap:8px}
-#stopBtn{width:auto;padding:0 16px;border-radius:999px;font-size:14px;font-weight:700;display:none;align-items:center;gap:6px}
-#stopBtn svg{width:16px;height:16px;fill:currentColor;stroke:none}
-body[data-run="1"] #stopBtn{display:inline-flex}
+/* 제목 블록: 보조 라벨 + 음 이름 */
+.pf-titleblock{padding:20px 0 6px}
+.note{font:900 150px/.9 var(--pf-font);letter-spacing:-.04em;color:#D6D6D6;margin-left:-.04em;transition:color .15s}
+.note .oct{font:900 48px/1 var(--pf-font);letter-spacing:0;color:var(--pf-black);margin-left:6px}
+.readout[data-state="good"] .note{color:var(--pf-black)}
+.guide{margin-top:18px;font:800 22px/1.2 var(--pf-font);min-height:1.2em}
+.sub{margin-top:6px;font:var(--pf-sub);color:var(--pf-gray);min-height:1.4em;font-variant-numeric:tabular-nums}
 
-/* 중앙: 음 원판 + 높낮이 막대 */
-.readout{display:flex;flex-direction:column;align-items:center;padding-top:10px;--sc:var(--muted)}
-.readout[data-state="near"],.readout[data-state="off"]{--sc:var(--off)}
-.readout[data-state="good"]{--sc:var(--good)}
-.orb{width:min(56vw,220px);aspect-ratio:1;border-radius:50%;background:var(--card);border:8px solid var(--line);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow:0 10px 30px rgba(15,23,42,.08);transition:border-color .2s,background .2s,color .2s}
-.readout[data-state="near"] .orb,.readout[data-state="off"] .orb{border-color:var(--off)}
-.readout[data-state="good"] .orb{border-color:var(--good);background:var(--good);color:#fff}
-.note{font-weight:800;font-size:clamp(76px,24vw,100px);line-height:.95;letter-spacing:-.04em}
-.readout[data-state="idle"] .note{color:var(--line)}
-.note sub{font-size:.28em;font-weight:700;color:var(--muted);vertical-align:baseline;margin-left:2px;letter-spacing:0}
-.readout[data-state="good"] .note sub{color:rgba(255,255,255,.8)}
-.cents{font-size:18px;font-weight:700;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
-.readout[data-state="good"] .cents{color:#fff}
-.msg{margin-top:16px;text-align:center;min-height:56px}
-.status{font-size:20px;font-weight:700;min-height:1.4em}
-.readout[data-state="good"] .status{color:var(--good)}
-.readout[data-state="near"] .status,.readout[data-state="off"] .status{color:var(--off)}
-.hz{margin-top:2px;font-size:13px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
-#startBtn{display:none;height:56px;padding:0 32px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;cursor:pointer;
-  box-shadow:0 6px 16px rgba(15,23,42,.25)}
-body[data-run="0"] #startBtn{display:inline-flex;align-items:center;gap:10px}
-body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
-.err{font-size:14px;font-weight:600;text-align:center;min-height:1.2em;margin-top:6px;color:var(--off)}
+/* 음정 막대: 검은 기준선, 5% 간격 눈금, 현재 음정은 Ember 세로 막대 */
+.meter{position:relative;height:92px;margin-top:14px}
+.meter .ember{position:absolute;top:0;height:44px;width:9px;margin-left:-4.5px;left:50%;background:var(--pf-ember);transition:opacity .2s}
+.readout[data-state="idle"] .meter .ember{opacity:0}
+.meter .base{position:absolute;left:0;right:0;top:44px;height:1px;background:var(--pf-black)}
+.meter .tick{position:absolute;top:45px;width:1px;height:7px;background:var(--pf-mute)}
+.meter .tick.mid{height:15px;background:var(--pf-black)}
+.meter .lab{position:absolute;top:66px;font:500 12px/1 var(--pf-font);color:var(--pf-gray)}
+.meter .lab.c{left:50%;transform:translateX(-50%)}
+.readout[data-state="good"] .meter .lab.c{font-weight:800;color:var(--pf-black)}
 
-.bar{position:relative;width:100%;height:48px;margin-top:6px}
-.bar .track{position:absolute;left:0;right:0;top:18px;height:12px;border-radius:6px;background:var(--tile)}
-.bar .zone{position:absolute;top:14px;height:20px;left:46.5%;width:7%;border-radius:6px;background:var(--good);opacity:.25}
-.bar .knob{position:absolute;top:10px;left:50%;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:var(--card);
-  border:5px solid var(--sc);box-shadow:0 2px 6px rgba(15,23,42,.25);will-change:left;transition:border-color .2s}
-.readout[data-state="idle"] .knob{opacity:.5}
-.bar .lab{position:absolute;top:34px;font-size:12px;font-weight:600;color:var(--muted)}
+/* 줄 선택 탭 */
+.pf-tab.hit{font-weight:800;color:var(--pf-black)}
+.hint{margin-top:8px;font:var(--pf-sub);color:var(--pf-gray);min-height:1.4em}
 
-/* 하단: 헤드스톡 (탭하면 그 줄로 고정) */
-.stock{flex:1;min-height:0;width:100%;display:block;margin-top:6px}
-.hd{fill:var(--card);stroke:var(--line);stroke-width:2}
-.stem{stroke:var(--line);stroke-width:6;stroke-linecap:round}
-.post{fill:var(--tile)}
-.peg{cursor:pointer;outline:none}
-.peg .hit{fill:transparent}
-.peg .pc{fill:var(--card);stroke:var(--line);stroke-width:3;transition:fill .15s,stroke .15s}
-.peg text{fill:var(--ink);font:800 22px "Gothic A1",system-ui,sans-serif;text-anchor:middle;pointer-events:none}
-.peg .oc{font-size:11px;font-weight:700;fill:var(--muted)}
-.peg.active .pc{stroke:var(--sc);fill:var(--card);stroke-width:5}
-.readout[data-state="near"] ~ .stock .peg.active .pc,.readout[data-state="off"] ~ .stock .peg.active .pc{stroke:var(--off)}
-.readout[data-state="good"] ~ .stock .peg.active .pc{fill:var(--good);stroke:var(--good)}
-.readout[data-state="good"] ~ .stock .peg.active text{fill:#fff}
-.peg.locked .pc{fill:var(--ink);stroke:var(--ink)}
-.peg.locked text{fill:#fff}
-.peg.locked .oc{fill:rgba(255,255,255,.7)}
-.peg:focus-visible .pc{stroke:var(--ink);stroke-width:5}
-.peg.ring .pc{animation:pulse .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
-@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.07)}}
-.hint{text-align:center;font-size:12px;color:var(--muted);margin-top:2px}
-@media (prefers-reduced-motion:reduce){.peg.ring .pc{animation:none}.orb{transition:none}}
+#startBtn{display:none;margin-top:20px}
+body[data-run="0"] #startBtn{display:block}
+.err{font:700 13px/1.4 var(--pf-font);margin-top:10px;min-height:1.4em}
 
 /* 설정 시트 */
 .scrim{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
@@ -123,7 +70,7 @@ body[data-run="0"] .msg .status,body[data-run="0"] .msg .hz{display:none}
 .step button{width:44px;height:44px;border:0;border-radius:50%;background:var(--tile);font-size:22px;cursor:pointer}
 .step output{min-width:72px;text-align:center;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
 .done{width:100%;height:52px;margin-top:22px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
 </style>
 </head>
 <body data-run="0">
@@ -134,42 +81,35 @@ button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
   <symbol id="ic-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="3" fill="currentColor" stroke="none"/></symbol>
   <symbol id="ic-fork" viewBox="0 0 24 24"><path d="M8 3v8a4 4 0 0 0 8 0V3M12 15v6.5"/></symbol>
 </svg>
-<main class="app">
-  <div class="top">
-    <div class="left">
-      <button class="icon" id="instBtn" aria-label="악기 선택"><svg class="ic"><use id="instUse" href="#ic-guitar"/></svg></button>
-      <button class="chip" id="autoChip" aria-pressed="true"><i></i><span id="autoTxt">자동 감지</span></button>
-    </div>
+<main class="pf-screen app">
+  <div class="pf-topbar">
+    <span class="pf-wordmark">Pitch</span>
     <div class="tools">
-      <button class="icon" id="stopBtn" aria-label="정지"><svg class="ic"><use href="#ic-stop"/></svg>정지</button>
-      <button class="icon" id="gearBtn" aria-label="설정">
-        <svg viewBox="0 0 24 24"><path fill="currentColor" stroke="none" fill-rule="evenodd" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1zM12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6Z"/></svg>
-      </button>
+      <button class="pf-action" id="runBtn">시작</button>
+      <button class="pf-action" id="gearBtn">설정</button>
     </div>
   </div>
 
   <section class="readout" id="readout" data-state="idle">
-    <div class="orb">
-      <div class="note" id="note">E<sub>2</sub></div>
-      <div class="cents" id="cents"></div>
+    <div class="pf-titleblock">
+      <div class="pf-eyebrow" id="eyebrow"></div>
+      <div class="note" id="note">E<span class="oct">2</span></div>
     </div>
-    <div class="msg" aria-live="polite">
-      <button id="startBtn"><svg class="ic"><use href="#ic-mic"/></svg>마이크 켜고 시작</button>
-      <div class="status" id="status">줄을 튕기십시오</div>
-      <div class="hz" id="hz"></div>
+    <div class="guide" id="status" aria-live="polite">줄을 튕기십시오</div>
+    <div class="sub" id="hz"></div>
+    <div class="meter" aria-hidden="true" id="meter">
+      <div class="base"></div>
+      <div class="ember" id="ember"></div>
+      <span class="lab" style="left:0">낮음</span><span class="lab c">정확</span><span class="lab" style="right:0">높음</span>
     </div>
-    <div class="bar" aria-hidden="true">
-      <div class="track"></div><div class="zone"></div><div class="knob" id="knob"></div>
-      <span class="lab" style="left:0">낮음</span><span class="lab" style="left:50%;transform:translateX(-50%)">정확</span><span class="lab" style="right:0">높음</span>
-    </div>
-    <div class="err" id="err"></div>
   </section>
 
-  <svg class="stock" id="stock" viewBox="0 0 320 330" preserveAspectRatio="xMidYMid meet" role="group" aria-label="줄 선택 (탭하면 그 줄로 고정)">
-    <g id="deco"></g>
-    <g id="pegs"></g>
-  </svg>
-  <div class="hint" id="hint">줄을 탭하면 그 줄로 고정됩니다</div>
+  <div class="pf-label"><span>줄 선택</span></div>
+  <div class="pf-tabs" id="tabs" role="tablist" aria-label="줄 선택"></div>
+  <div class="hint" id="hint"></div>
+
+  <button class="pf-btn-primary" id="startBtn">마이크 켜고 시작</button>
+  <div class="err" id="err"></div>
 </main>
 
 <div class="scrim" id="scrim" hidden>
@@ -202,9 +142,7 @@ const TUNINGS = {
   bass: { minF: 35, maxF: 120, strings: [
     {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
 };
-// 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호
-// 헤드스톡 페그 배치(위에서 아래): 왼쪽/오른쪽에 놓일 줄 번호. 베이스는 4개를 한쪽에 일렬로 놓고 팁 쪽이 G, 너트 쪽이 E
-const PEGS = { guitar:{L:[2,1,0],R:[3,4,5]}, bass:{L:[3,2,1,0],R:[]} };
+const INST_NAME = { guitar:'기타', bass:'베이스' };
 const IN_TUNE = 3;      // ±센트
 const GATE_RMS = 0.008; // 이하 무음 처리
 const HOLD_MS = 900;
@@ -220,13 +158,22 @@ let a4 = store.get('a4',440);
 let auto = true, locked = 0;
 let ctx=null, analyser=null, stream=null, buf=null, raf=0, wake=null;
 let hist=[], smooth=null, curIdx=-1, lastHeard=0, frame=0;
-let pegEls=[];
+let autoTab=null, tabEls=[];
 
-// 높낮이 막대의 손잡이: 스프링-댐퍼 관성 (감지 로직과 분리, 목표 센트만 받음)
-const knobEl=$('knob');
+// 음정 막대: 5% 간격 눈금(±50센트를 0-100%로 매핑, 중앙은 길게)
+(function(){
+  const m=$('meter');
+  for(let i=0;i<=20;i++){
+    const t=document.createElement('i'); t.className='tick'+(i===10?' mid':'');
+    t.style.left=(i*5)+'%'; m.appendChild(t);
+  }
+})();
+
+// 막대의 Ember 표시: 스프링-댐퍼 관성 (감지 로직과 분리, 목표 센트만 받음)
+const emberEl=$('ember');
 const reduceMotion=matchMedia('(prefers-reduced-motion:reduce)');
 let nPos=0, nVel=0, nTarget=0, nRaf=0, nLast=0;
-function renderNeedle(){ knobEl.style.left=(50+nPos*0.9).toFixed(2)+'%'; }
+function renderNeedle(){ emberEl.style.left=(50+Math.max(-50,Math.min(50,nPos))).toFixed(2)+'%'; }
 function stepNeedle(t){
   const dt=Math.min(0.05,(t-nLast)/1000||0.016); nLast=t;
   const K=70, C=9.5; // 약한 부족감쇠: 살짝 넘쳤다가 안착
@@ -246,64 +193,58 @@ renderNeedle();
 
 const freqOf = m => a4 * Math.pow(2,(m-69)/12);
 
-// 헤드스톡 그리기
-const BASS_POST=138; // 베이스 줄 고정부(구멍) x: 헤드 가운데 쪽으로 이동
-const NS='http://www.w3.org/2000/svg';
-const el=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
+// 줄 선택 탭: 자동 + 각 줄 (줄을 고르면 그 줄로 고정, 같은 탭을 다시 누르면 자동으로 복귀)
 function renderStrings(){
-  const deco=$('deco'), box=$('pegs'); deco.textContent=''; box.textContent=''; pegEls=[];
-  const HEAD={
-    guitar:'M130 330 L130 250 C130 222 110 208 110 182 L110 50 Q110 12 160 12 Q210 12 210 50 L210 182 C210 208 190 222 190 250 L190 330 Z',
-    // 베이스: 기타와 같은 헤드를 세로로 길게 늘린 모양
-    bass:'M130 330 L130 300 C130 268 110 254 110 224 L110 50 Q110 8 160 8 Q210 8 210 50 L210 224 C210 254 190 268 190 300 L190 330 Z'
+  const box=$('tabs'); box.textContent=''; tabEls=[];
+  const list=TUNINGS[inst].strings;
+  const mk=(label,onclick)=>{
+    const b=document.createElement('button');
+    b.className='pf-tab'; b.setAttribute('role','tab'); b.textContent=label; b.onclick=onclick;
+    box.appendChild(b); return b;
   };
-  el('path',{class:'hd',d:HEAD[inst]},deco);
-  const P=PEGS[inst], list=TUNINGS[inst].strings;
-  const ys = n => n===4 ? [52,114,176,238] : [62,128,194];
-    (inst==='bass' ? [['L',44,112]] : [['L',44,112],['R',276,208]]).forEach(([side,px,hx])=>{
-    const idxs=P[side], yy=ys(idxs.length);
-    idxs.forEach((si,k)=>{
-      const y=yy[k], s=list[si];
-      el('line',{class:'stem',x1:inst==='bass'?BASS_POST:hx,y1:y,x2:px,y2:y},deco);
-      el('circle',{class:'post',cx:inst==='bass'?BASS_POST:(side==='L'?132:188),cy:y,r:8},deco);
-      const g=el('g',{class:'peg',tabindex:0,role:'button','aria-label':`${s.n}${s.o} 줄`},box);
-      el('circle',{class:'hit',cx:px,cy:y,r:34},g);
-      el('circle',{class:'pc',cx:px,cy:y,r:27},g);
-      const t=el('text',{x:px,y:y+2},g); t.textContent=s.n;
-      const o=el('text',{class:'oc',x:px,y:y+16},g); o.textContent=s.o;
-      const pick=()=>{
-        if(!auto&&locked===si){ auto=true; syncAuto(); setActive(-1); return; }
-        auto=false; locked=si; showNote(s); syncAuto(); setActive(si);
-      };
-      g.addEventListener('click',pick);
-      g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
-      pegEls[si]=g;
+  autoTab=mk('자동',()=>{ if(!auto){ auto=true; syncAuto(); setActive(-1); } });
+  autoTab.setAttribute('aria-label','자동 감지');
+  list.forEach((s,i)=>{
+    const t=mk(`${s.n}${s.o}`,()=>{
+      if(!auto&&locked===i){ auto=true; syncAuto(); setActive(-1); return; }
+      auto=false; locked=i; showNote(s); syncAuto(); setActive(i);
     });
+    t.setAttribute('aria-label',`${s.n}${s.o} 줄`);
+    tabEls[i]=t;
   });
   document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
-  $('instUse').setAttribute('href','#ic-'+inst);
   showNote(list[0]);
   syncAuto();
   setActive(auto?-1:locked);
 }
-function setActive(i){
-  curIdx=i;
-  pegEls.forEach((el,k)=>{
-    el.classList.toggle('active',k===i);
-    el.classList.toggle('locked',!auto&&k===locked);
+function refreshTabs(){
+  if(!autoTab) return;
+  autoTab.setAttribute('aria-selected',auto);
+  tabEls.forEach((el,k)=>{
+    el.setAttribute('aria-selected',!auto&&k===locked);
+    el.classList.toggle('hit',auto&&k===curIdx);
   });
 }
-function syncAuto(){
+function setActive(i){ curIdx=i; refreshTabs(); }
+function renderEyebrow(){
   const s=TUNINGS[inst].strings[locked];
-  $('autoChip').setAttribute('aria-pressed',auto);
-  $('autoTxt').textContent = auto ? '자동 감지' : `${s.n}${s.o} 줄 고정 (탭하면 자동)`;
-  $('hint').textContent = auto ? '줄을 탭하면 그 줄로 고정됩니다' : '고정한 줄을 다시 탭하면 자동 감지로 돌아갑니다';
+  const live=auto&&document.body.dataset.run==='1';
+  $('eyebrow').innerHTML=`<span class="${live?'pf-now':''}">${auto?'자동 감지':`${s.n}${s.o} 고정`}</span><span aria-hidden="true">·</span><span>${INST_NAME[inst]}</span>`;
+}
+function syncAuto(){
+  $('hint').textContent = auto ? '줄을 탭하면 그 줄로 고정됩니다' : '고정한 줄을 다시 탭하거나 자동을 탭하면 자동 감지로 돌아갑니다';
+  renderEyebrow();
   setActive(auto?curIdx:locked);
 }
-function showNote(s){ $('note').innerHTML=`${s.n}<sub>${s.o}</sub>`; }
+function showNote(s){ $('note').innerHTML=`${s.n}<span class="oct">${s.o}</span>`; }
 function setRef(v){
   a4=Math.max(430,Math.min(450,v)); store.set('a4',a4);
   $('refVal').textContent=a4+'Hz';
+}
+function syncRun(){
+  const on=document.body.dataset.run==='1';
+  $('runBtn').textContent = on ? '정지' : '시작';
+  renderEyebrow();
 }
 
 document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
@@ -311,14 +252,12 @@ document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
 });
 $('refDown').onclick=()=>setRef(a4-1);
 $('refUp').onclick=()=>setRef(a4+1);
-$('autoChip').onclick=()=>{ if(!auto){ auto=true; syncAuto(); setActive(-1); } };
 $('startBtn').onclick=start;
-$('stopBtn').onclick=stop;
+$('runBtn').onclick=()=> ctx ? stop() : start();
 const sheet=$('scrim');
 const openSheet=()=>{ sheet.hidden=false; $('doneBtn').focus(); };
 const closeSheet=()=>{ sheet.hidden=true; $('gearBtn').focus(); };
 $('gearBtn').onclick=openSheet;
-$('instBtn').onclick=openSheet;
 $('doneBtn').onclick=closeSheet;
 sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!sheet.hidden) closeSheet(); });
@@ -381,21 +320,17 @@ function draw(s,c,f){
   setNeedle(c);
   const r=Math.round(c);
   const good=Math.abs(c)<=IN_TUNE;
-  $('readout').dataset.state = good ? 'good' : (Math.abs(c)<=10 ? 'near' : 'off');
-  $('cents').textContent = good ? '정확' : `${r>0?'+':'−'}${Math.abs(r)}센트`;
   const near=Math.abs(c)<=10; // 10센트 이내는 "조금"
+  $('readout').dataset.state = good ? 'good' : (near ? 'near' : 'off');
   $('status').textContent = good ? '정확' : (r<0 ? `${near?'조금 ':''}낮음` : `${near?'조금 ':''}높음`);
-  $('hz').textContent = `${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
-  pegEls.forEach((el,k)=>el.classList.toggle('ring',k===curIdx));
+  $('hz').textContent = `${good?'':(r>0?'+':'−')+Math.abs(r)+'센트 · '}${f.toFixed(1)}Hz, 목표 ${freqOf(s.m).toFixed(1)}Hz`;
 }
 function idle(){
   if($('readout').dataset.state==='idle') return;
   $('readout').dataset.state='idle';
   $('status').textContent='줄을 튕기십시오';
-  $('cents').textContent='';
   $('hz').textContent='';
   hist=[]; smooth=null; setNeedle(0);
-  pegEls.forEach(el=>el.classList.remove('ring'));
   if(auto) setActive(-1);
 }
 
@@ -415,7 +350,7 @@ async function start(){
   src.connect(analyser);
   buf=new Float32Array(analyser.fftSize);
   try{ wake=await navigator.wakeLock?.request('screen'); }catch(e){}
-  document.body.dataset.run='1';
+  document.body.dataset.run='1'; syncRun();
   $('status').textContent='줄을 튕기십시오';
   tick();
 }
@@ -424,12 +359,13 @@ function stop(){
   stream?.getTracks().forEach(t=>t.stop());
   ctx?.close(); ctx=null;
   try{ wake?.release(); }catch(e){} wake=null;
-  document.body.dataset.run='0';
+  document.body.dataset.run='0'; syncRun();
   idle();
 }
 
 setRef(a4);
 renderStrings();
+syncRun();
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
