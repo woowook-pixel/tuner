@@ -53,34 +53,25 @@ button{font:inherit;color:inherit;border-radius:0;cursor:pointer}
 body[data-run="0"] #startBtn{display:block}
 .err{font:700 13px/1.4 var(--pf-font);margin-top:10px;min-height:1.4em}
 
-/* 설정 시트 */
-.scrim{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+/* 설정 시트: 상단 직선 + 검정 2px 선, 뒤 배경은 --pf-dim */
+.scrim{position:fixed;inset:0;background:var(--pf-dim);display:flex;align-items:flex-end;justify-content:center;z-index:10}
 .scrim[hidden]{display:none}
-.sheet{width:100%;max-width:480px;background:var(--card);border-radius:28px 28px 0 0;padding:12px 20px calc(24px + env(safe-area-inset-bottom,0px))}
-.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
-.sheet h2{margin:0 0 14px;font-size:18px}
-.sheet h3{margin:20px 0 8px;font-size:14px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px solid var(--line);border-radius:16px;background:var(--card);font-size:16px;font-weight:700;cursor:pointer}
-.opt[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
-.opt small{display:block;margin-top:-2px;font-size:12px;font-weight:500;opacity:.7}
-.refrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.refrow p{margin:0;font-size:13px;line-height:1.5;color:var(--muted);flex:1}
-.step{display:flex;align-items:center;gap:6px}
-.step button{width:44px;height:44px;border:0;border-radius:50%;background:var(--tile);font-size:22px;cursor:pointer}
-.step output{min-width:72px;text-align:center;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-.done{width:100%;height:52px;margin-top:22px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.sheet{width:100%;max-width:480px;max-height:100vh;overflow:auto;padding-bottom:calc(34px + env(safe-area-inset-bottom,0px))}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;min-height:var(--pf-touch)}
+.sheet-head h2{font:var(--pf-heading);letter-spacing:-.02em;margin:0}
+.inst{width:100%;border:0;background:none;text-align:left}
+.inst .nm{font:800 16px/1.2 var(--pf-font)}
+.inst .box{width:10px;height:10px;margin-left:auto;box-shadow:inset 0 0 0 1px var(--pf-black)}
+.inst[aria-pressed="true"] .box{background:var(--pf-black)}
+.refline{display:flex;align-items:center;justify-content:space-between;min-height:var(--pf-row)}
+.refline .pf-action{font-size:22px;font-weight:700;letter-spacing:0}
+.refline output{font:900 34px/1 var(--pf-font);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.refnote{margin:8px 0 0;font:400 13px/1.5 var(--pf-font);color:var(--pf-gray)}
+.sheet .pf-btn-primary{margin-top:28px}
 button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
 </style>
 </head>
 <body data-run="0">
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <symbol id="ic-guitar" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="2" width="2" height="20" rx="1"/><rect x="6" y="2" width="2" height="20" rx="1"/><rect x="9" y="2" width="2" height="20" rx="1"/><rect x="12" y="2" width="2" height="20" rx="1"/><rect x="15" y="2" width="2" height="20" rx="1"/><rect x="18" y="2" width="2" height="20" rx="1"/><rect x="1" y="8" width="22" height="3" rx="1.5"/></symbol>
-  <symbol id="ic-bass" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="2" width="3" height="20" rx="1.5"/><rect x="8" y="2" width="3" height="20" rx="1.5"/><rect x="13" y="2" width="3" height="20" rx="1.5"/><rect x="18" y="2" width="3" height="20" rx="1.5"/><rect x="1" y="8" width="22" height="3" rx="1.5"/></symbol>
-  <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="11.5" rx="3" fill="currentColor" stroke="none"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"/></symbol>
-  <symbol id="ic-stop" viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" rx="3" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="ic-fork" viewBox="0 0 24 24"><path d="M8 3v8a4 4 0 0 0 8 0V3M12 15v6.5"/></symbol>
-</svg>
 <main class="pf-screen app">
   <div class="pf-topbar">
     <span class="pf-wordmark">Pitch</span>
@@ -113,24 +104,24 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
 </main>
 
 <div class="scrim" id="scrim" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-label="설정">
-    <div class="grab"></div>
-    <h2>설정</h2>
-    <h3>악기 선택</h3>
-    <div class="opts">
-      <button class="opt" data-inst="guitar" aria-pressed="true"><svg class="ic big"><use href="#ic-guitar"/></svg>기타<small>6현 E A D G B E</small></button>
-      <button class="opt" data-inst="bass" aria-pressed="false"><svg class="ic big"><use href="#ic-bass"/></svg>베이스<small>4현 E A D G</small></button>
+  <div class="pf-sheet sheet" role="dialog" aria-modal="true" aria-label="설정">
+    <div class="sheet-head">
+      <h2>설정</h2>
+      <button class="pf-action" id="closeBtn">닫기</button>
     </div>
-    <h3><svg class="ic sm"><use href="#ic-fork"/></svg>기준음 (A4)</h3>
-    <div class="refrow">
-      <p>피아노 등 다른 악기와 음높이를 맞출 때만 바꿉니다. 보통은 440Hz 그대로 두면 됩니다.</p>
-      <div class="step">
-        <button id="refDown" aria-label="기준음 낮추기">−</button>
-        <output id="refVal">440Hz</output>
-        <button id="refUp" aria-label="기준음 높이기">+</button>
-      </div>
+    <div class="pf-label"><span>악기 선택</span></div>
+    <div class="pf-list">
+      <button class="pf-row inst" data-inst="guitar" aria-pressed="true"><span class="nm">기타</span><span class="pf-row-sub">6현 · E A D G B E</span><i class="box"></i></button>
+      <button class="pf-row inst" data-inst="bass" aria-pressed="false"><span class="nm">베이스</span><span class="pf-row-sub">4현 · E A D G</span><i class="box"></i></button>
     </div>
-    <button class="done" id="doneBtn">완료</button>
+    <div class="pf-label"><span>기준음 (A4)</span></div>
+    <div class="refline">
+      <button class="pf-action" id="refDown" aria-label="기준음 낮추기">−</button>
+      <output id="refVal">440Hz</output>
+      <button class="pf-action" id="refUp" aria-label="기준음 높이기">+</button>
+    </div>
+    <p class="refnote">피아노 등 다른 악기와 음높이를 맞출 때만 바꿉니다. 보통은 440Hz 그대로 두면 됩니다.</p>
+    <button class="pf-btn-primary" id="doneBtn">완료</button>
   </div>
 </div>
 
@@ -212,7 +203,7 @@ function renderStrings(){
     t.setAttribute('aria-label',`${s.n}${s.o} 줄`);
     tabEls[i]=t;
   });
-  document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
+  document.querySelectorAll('.inst').forEach(x=>x.setAttribute('aria-pressed',x.dataset.inst===inst));
   showNote(list[0]);
   syncAuto();
   setActive(auto?-1:locked);
@@ -247,7 +238,7 @@ function syncRun(){
   renderEyebrow();
 }
 
-document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.inst').forEach(b=>b.onclick=()=>{
   inst=b.dataset.inst; store.set('inst',inst); locked=0; smooth=null; hist=[]; auto=true; renderStrings();
 });
 $('refDown').onclick=()=>setRef(a4-1);
@@ -255,10 +246,11 @@ $('refUp').onclick=()=>setRef(a4+1);
 $('startBtn').onclick=start;
 $('runBtn').onclick=()=> ctx ? stop() : start();
 const sheet=$('scrim');
-const openSheet=()=>{ sheet.hidden=false; $('doneBtn').focus(); };
+const openSheet=()=>{ sheet.hidden=false; $('closeBtn').focus(); };
 const closeSheet=()=>{ sheet.hidden=true; $('gearBtn').focus(); };
 $('gearBtn').onclick=openSheet;
 $('doneBtn').onclick=closeSheet;
+$('closeBtn').onclick=closeSheet;
 sheet.addEventListener('click',e=>{ if(e.target===sheet) closeSheet(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!sheet.hidden) closeSheet(); });
 
