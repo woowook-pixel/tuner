@@ -247,7 +247,7 @@ renderNeedle();
 const freqOf = m => a4 * Math.pow(2,(m-69)/12);
 
 // 헤드스톡 그리기
-const BASS_POST=158; // 베이스 줄 고정부(구멍) x: 헤드 가운데 쪽으로 이동
+const BASS_POST=146; // 베이스 줄 고정부(구멍) x: 헤드 가운데 쪽으로 이동
 const NS='http://www.w3.org/2000/svg';
 const el=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
 function renderStrings(){
