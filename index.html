@@ -10,30 +10,27 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="튜너">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#24170F">
+<meta name="theme-color" content="#0C0D10">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#E4E7DF; --surface:#D3D8CC; --ink:#2B2420; --muted:#6B6259;
-  --brass:#8A6A2C; --good:#3E8A47; --off:#B0456A; --line:#9AA090;
-  --dial:#F1E7CF; --dial2:#D9C9A3; --dialink:#2B2420; --bezel:#3A2D24;
+  --bg:#F4F5F7; --surface:#FFFFFF; --ink:#14161A; --muted:#757A85;
+  --accent:#2F6BFF; --on-accent:#FFFFFF; --good:#0FA968; --off:#E5405E; --line:#DADDE4;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#24170F; --surface:#33231A; --ink:#EFE4D0; --muted:#A8977F;
-    --brass:#C9A45C; --good:#8CC084; --off:#D3708C; --line:#5A4535;
-    --dial:#E9DCBC; --dial2:#BFA877; --dialink:#2B2013; --bezel:#120B07;
+    --bg:#0C0D10; --surface:#17191E; --ink:#F2F3F5; --muted:#8A8F9A;
+    --accent:#7C9CFF; --on-accent:#0C0D10; --good:#3DDC97; --off:#FF6B88; --line:#2A2D35;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#24170F; --surface:#33231A; --ink:#EFE4D0; --muted:#A8977F;
-  --brass:#C9A45C; --good:#8CC084; --off:#D3708C; --line:#5A4535;
-  --dial:#E9DCBC; --dial2:#BFA877; --dialink:#2B2013; --bezel:#120B07;
+  --bg:#0C0D10; --surface:#17191E; --ink:#F2F3F5; --muted:#8A8F9A;
+  --accent:#7C9CFF; --on-accent:#0C0D10; --good:#3DDC97; --off:#FF6B88; --line:#2A2D35;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -44,65 +41,65 @@ body{height:100%;margin:0;background:var(--bg);color:var(--ink);
 
 /* 상단 */
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.seg{display:flex;background:var(--surface);border-radius:999px;padding:4px}
+.seg{display:flex;background:var(--surface);border-radius:999px;padding:4px;border:1px solid var(--line)}
 .seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;
-  padding:8px 16px;border-radius:999px;cursor:pointer}
+  padding:8px 18px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .ref{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
-.ref button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);
-  background:transparent;color:var(--ink);font-size:18px;cursor:pointer}
-.ref output{min-width:64px;text-align:center;color:var(--ink);font-weight:600}
+.ref button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer}
+.ref output{min-width:64px;text-align:center;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 
 /* 중앙 판독부 */
 .readout{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0}
-.note{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;
-  font-size:clamp(72px,24vw,112px);line-height:.9;letter-spacing:-.02em;
-  color:var(--ink);transition:color .15s;margin-bottom:12px}
-.note sub{font-size:.28em;font-weight:600;color:var(--muted);vertical-align:baseline;margin-left:4px}
+.note{font-weight:700;font-size:clamp(72px,22vw,104px);line-height:1;letter-spacing:-.04em;
+  color:var(--ink);transition:color .15s;margin-bottom:16px}
+.note sub{font-size:.3em;font-weight:600;color:var(--muted);vertical-align:baseline;margin-left:4px;letter-spacing:0}
 .readout[data-state="good"] .note{color:var(--good)}
 .readout[data-state="off"] .note{color:var(--off)}
 .readout[data-state="idle"] .note{color:var(--line)}
 
-.meter{width:100%;max-height:100%;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.28))}
-.meter .face{fill:url(#dialGrad)}
-.meter .bezel{fill:var(--bezel)}
-.meter .tk{stroke:var(--dialink);stroke-linecap:round}
-.meter .lbl{fill:var(--dialink);font:600 10px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;dominant-baseline:middle}
-.meter .zone{fill:none;stroke:var(--good);stroke-width:7;opacity:.55}
-.meter .flat,.meter .sharp{font:800 15px "Big Shoulders Display","Arial Narrow",sans-serif;fill:var(--dialink);text-anchor:middle;opacity:.7}
-.meter .needle{stroke:#B3261E;stroke-linecap:round;transition:stroke .15s}
-.meter .hub{fill:#2B2420;stroke:#8A6A2C;stroke-width:2}
-.meter .glass{fill:url(#glassGrad);pointer-events:none}
+.meter{width:100%;max-height:100%;display:block}
+.meter .card{fill:var(--surface);stroke:var(--line);stroke-width:1}
+.meter .tk{stroke:var(--muted);stroke-linecap:round}
+.meter .tk.mid{stroke:var(--ink)}
+.meter .lbl{fill:var(--muted);font:600 9px "IBM Plex Sans KR",system-ui,sans-serif;text-anchor:middle;dominant-baseline:middle}
+.meter .zone{fill:none;stroke:var(--good);stroke-width:5;stroke-linecap:round}
+.meter .side{fill:var(--muted);font:600 11px "IBM Plex Sans KR",system-ui,sans-serif}
+.meter .needle{stroke:var(--ink);stroke-linecap:round;transition:stroke .15s}
+.meter .hub{fill:var(--ink);transition:fill .15s}
+.meter .hubdot{fill:var(--surface)}
 #needle{transition:opacity .3s}
-.readout[data-state="idle"] #needle{opacity:.45}
+.readout[data-state="idle"] #needle{opacity:.3}
 .readout[data-state="good"] .needle{stroke:var(--good)}
-.status{margin-top:16px;font-size:18px;font-weight:600;min-height:1.4em}
+.readout[data-state="good"] .hub{fill:var(--good)}
+.readout[data-state="off"] .needle{stroke:var(--off)}
+.readout[data-state="off"] .hub{fill:var(--off)}
+.status{margin-top:18px;font-size:18px;font-weight:600;min-height:1.4em}
 .hz{font-size:14px;color:var(--muted);min-height:1.3em;font-variant-numeric:tabular-nums}
 
 /* 줄 */
-.strings{display:flex;justify-content:space-around;align-items:flex-end;height:120px;margin-bottom:8px}
-.str{display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:0;
-  padding:0;cursor:pointer;color:var(--ink);font:inherit}
-.str .wire{width:var(--g);height:64px;background:var(--line);border-radius:2px;transition:background .15s}
-.str .peg{width:48px;height:48px;border-radius:50%;border:2px solid var(--line);
-  display:grid;place-items:center;font-weight:600;font-size:17px}
-.str .peg small{font-size:10px;color:var(--muted);margin-left:1px}
-.str.active .wire{background:var(--brass)}
-.str.active .peg{border-color:var(--brass);background:var(--surface)}
-.str.locked .peg{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.str.locked .peg small{color:var(--bg)}
-.str.ring .wire{animation:ring .09s linear infinite alternate}
-@keyframes ring{from{transform:translateX(-1px)}to{transform:translateX(1px)}}
-@media (prefers-reduced-motion:reduce){.str.ring .wire{animation:none}}
+.strings{display:flex;gap:8px;margin:12px 0 8px}
+.str{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:60px;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:0;cursor:pointer;color:var(--ink);font:inherit;font-weight:700;font-size:18px;
+  transition:border-color .15s}
+.str small{font-size:11px;font-weight:600;color:var(--muted)}
+.str.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.str.locked{background:var(--ink);color:var(--bg);border-color:var(--ink);box-shadow:none}
+.str.locked small{color:var(--bg);opacity:.7}
+.str.ring{border-color:var(--good);box-shadow:inset 0 0 0 1px var(--good);animation:pulse .6s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.str.ring{animation:none}}
 
 .bottom{display:flex;gap:12px;margin-top:12px}
-.bottom button{flex:1;height:52px;border-radius:14px;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
-#autoBtn{background:transparent;color:var(--ink);border:1px solid var(--line)}
-#autoBtn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
-#startBtn{background:var(--ink);color:var(--bg);border:0}
-#startBtn.on{background:var(--surface);color:var(--ink)}
+.bottom button{flex:1;height:54px;border-radius:999px;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
+#autoBtn{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+#autoBtn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+#startBtn{background:var(--accent);color:var(--on-accent);border:0}
+#startBtn.on{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 .err{font-size:14px;color:var(--off);text-align:center;min-height:1.2em;margin-top:8px}
-button:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -121,28 +118,16 @@ button:focus-visible{outline:3px solid var(--brass);outline-offset:2px}
 
   <section class="readout" id="readout" data-state="idle" aria-live="polite">
     <div class="note" id="note">E<sub>2</sub></div>
-    <svg class="meter" viewBox="0 0 320 214" aria-hidden="true">
-      <defs>
-        <radialGradient id="dialGrad" cx="50%" cy="95%" r="95%">
-          <stop offset="0" stop-color="var(--dial)"/><stop offset="1" stop-color="var(--dial2)"/>
-        </radialGradient>
-        <linearGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/>
-        </linearGradient>
-        <clipPath id="clipFace"><rect x="8" y="8" width="304" height="198" rx="18"/></clipPath>
-      </defs>
-      <rect class="bezel" x="0" y="0" width="320" height="214" rx="24"/>
-      <rect class="face" x="8" y="8" width="304" height="198" rx="18"/>
-      <g clip-path="url(#clipFace)">
-        <g id="dialMarks"></g>
-        <text class="flat" x="62" y="52">♭</text>
-        <text class="sharp" x="258" y="52">♯</text>
-        <g id="needle">
-          <line class="needle" x1="160" y1="226" x2="160" y2="42" stroke-width="2.6"/>
-          <line class="needle" x1="160" y1="226" x2="160" y2="196" stroke-width="7" opacity=".9"/>
-        </g>
-        <rect class="glass" x="8" y="8" width="304" height="100"/>
+    <svg class="meter" viewBox="0 0 320 200" aria-hidden="true">
+      <rect class="card" x=".5" y=".5" width="319" height="199" rx="28"/>
+      <g id="dialMarks"></g>
+      <text class="side" x="24" y="184">낮음</text>
+      <text class="side" x="296" y="184" text-anchor="end">높음</text>
+      <g id="needle">
+        <line class="needle" x1="160" y1="170" x2="160" y2="40" stroke-width="3"/>
       </g>
+      <circle class="hub" cx="160" cy="170" r="10"/>
+      <circle class="hubdot" cx="160" cy="170" r="3.5"/>
     </svg>
     <div class="status" id="status">시작을 누르고 줄을 튕기세요</div>
     <div class="hz" id="hz"></div>
@@ -181,22 +166,20 @@ let auto = true, locked = 0;
 let ctx=null, analyser=null, stream=null, buf=null, raf=0, wake=null;
 let hist=[], smooth=null, curIdx=-1, lastHeard=0, frame=0;
 
-// 부채꼴 눈금판: ±50센트 = ±45도, 회전축은 판 하단 중앙(160,226)
-const PX=160, PY=226, DEG_PER_CENT=0.9;
+// 부채꼴 눈금판: ±50센트 = ±60도, 회전축은 판 하단 중앙(160,170)
+const PX=160, PY=170, DEG_PER_CENT=1.2;
 (function(){
   const NS='http://www.w3.org/2000/svg', g=$('dialMarks');
   const pt=(c,r)=>{ const a=c*DEG_PER_CENT*Math.PI/180; return [PX+r*Math.sin(a), PY-r*Math.cos(a)]; };
   const mk=(tag,attrs,txt)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(txt!==undefined) e.textContent=txt; g.appendChild(e); };
-  const R=176;
-  const [zx1,zy1]=pt(-IN_TUNE,R-8), [zx2,zy2]=pt(IN_TUNE,R-8);
-  mk('path',{class:'zone',d:`M${zx1} ${zy1} A${R-8} ${R-8} 0 0 1 ${zx2} ${zy2}`});
-  const [ax,ay]=pt(-50,R), [bx,by]=pt(50,R);
-  mk('path',{class:'tk',fill:'none','stroke-width':1.4,d:`M${ax} ${ay} A${R} ${R} 0 0 1 ${bx} ${by}`});
+  const R=140;
+  const [zx1,zy1]=pt(-IN_TUNE,R+11), [zx2,zy2]=pt(IN_TUNE,R+11);
+  mk('path',{class:'zone',d:`M${zx1} ${zy1} A${R+11} ${R+11} 0 0 1 ${zx2} ${zy2}`});
   for(let c=-50;c<=50;c+=5){
     const major=c%10===0, mid=c===0;
-    const [x1,y1]=pt(c,R), [x2,y2]=pt(c,R-(mid?24:major?16:9));
-    mk('line',{class:'tk',x1,y1,x2,y2,'stroke-width':mid?3:major?2:1.2});
-    if(major){ const [tx,ty]=pt(c,R-30); mk('text',{class:'lbl',x:tx,y:ty},Math.abs(c)); }
+    const [x1,y1]=pt(c,R), [x2,y2]=pt(c,R-(mid?20:major?13:7));
+    mk('line',{class:mid?'tk mid':'tk',x1,y1,x2,y2,'stroke-width':mid?3:major?2:1.2});
+    if(major&&!mid){ const [tx,ty]=pt(c,R-26); mk('text',{class:'lbl',x:tx,y:ty},Math.abs(c)); }
   }
 })();
 
@@ -228,9 +211,9 @@ function renderStrings(){
   const box=$('strings'); box.innerHTML='';
   TUNINGS[inst].strings.forEach((s,i)=>{
     const b=document.createElement('button');
-    b.className='str'; b.style.setProperty('--g',s.g+'px');
+    b.className='str';
     b.setAttribute('aria-label',`${s.n}${s.o} 줄`);
-    b.innerHTML=`<span class="wire"></span><span class="peg">${s.n}<small>${s.o}</small></span>`;
+    b.innerHTML=`${s.n}<small>${s.o}</small>`;
     b.onclick=()=>{ auto=false; locked=i; syncAuto(); setActive(i); };
     box.appendChild(b);
   });
