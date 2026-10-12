@@ -10,9 +10,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
-  // 아이콘과 manifest는 서비스 워커를 거치지 않고 브라우저가 직접 받게 한다(홈 화면 아이콘 로딩에 간섭하지 않도록)
+  // 아이콘(중앙 주소 포함)과 manifest는 서비스 워커를 거치지 않고 브라우저가 직접 받게 한다(홈 화면 아이콘 로딩에 간섭하지 않도록)
   const u = new URL(e.request.url);
-  if (u.origin === location.origin && (/\.(png|svg|ico|webmanifest)$/.test(u.pathname) || u.pathname === '/version.json')) return;
+  if (/\.(png|svg|ico|webmanifest)$/.test(u.pathname) || (u.origin === location.origin && u.pathname === '/version.json')) return;
   e.respondWith(
     fetch(e.request).then(r => {
       const copy = r.clone();
