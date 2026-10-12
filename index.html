@@ -22,12 +22,10 @@ html{background:var(--pf-white)}
 body{-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;border-radius:0;cursor:pointer}
 .app{max-width:480px;min-height:100vh;margin:0 auto;display:flex;flex-direction:column;
-  /* 토큰의 54px는 상태바 아래 여백. 실제 안전영역에 맞춰 줄인다 */
-  padding-top:max(16px,env(safe-area-inset-top,0px));padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}
-.tools{display:flex;gap:6px}
+  padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}
 
 /* 제목 블록: 보조 라벨 + 음 이름 */
-.pf-titleblock{padding:20px 0 6px}
+.pf-titleblock{padding-bottom:6px}
 .note{font:900 150px/.9 var(--pf-font);letter-spacing:-.04em;color:#D6D6D6;margin-left:-.04em;transition:color .15s}
 .note .oct{font:900 48px/1 var(--pf-font);letter-spacing:0;color:var(--pf-black);margin-left:6px}
 .readout[data-state="good"] .note{color:var(--pf-black)}
@@ -72,28 +70,28 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
 </style>
 </head>
 <body data-run="0">
-<main class="pf-screen app">
-  <div class="pf-topbar">
-    <span class="pf-wordmark">Pitch</span>
-    <div class="tools">
-      <button class="pf-action" id="runBtn">시작</button>
-      <button class="pf-action" id="gearBtn">설정</button>
+<main class="pf-screen app readout" id="readout" data-state="idle">
+  <header class="pf-header">
+    <div class="pf-topbar">
+      <span class="pf-wordmark">Pitch</span>
+      <div class="pf-actions">
+        <button class="pf-action" id="runBtn">시작</button>
+        <button class="pf-action" id="gearBtn">설정</button>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <section class="readout" id="readout" data-state="idle">
-    <div class="pf-titleblock">
-      <div class="pf-eyebrow" id="eyebrow"></div>
-      <div class="note" id="note">E<span class="oct">2</span></div>
-    </div>
-    <div class="guide" id="status" aria-live="polite">줄을 튕기십시오</div>
-    <div class="sub" id="hz"></div>
-    <div class="meter" aria-hidden="true" id="meter">
-      <div class="base"></div>
-      <div class="ember" id="ember"></div>
-      <span class="lab" style="left:0">낮음</span><span class="lab c">정확</span><span class="lab" style="right:0">높음</span>
-    </div>
-  </section>
+  <div class="pf-titleblock">
+    <div class="pf-eyebrow" id="eyebrow"></div>
+    <div class="note" id="note">E<span class="oct">2</span></div>
+  </div>
+  <div class="guide" id="status" aria-live="polite">줄을 튕기십시오</div>
+  <div class="sub" id="hz"></div>
+  <div class="meter" aria-hidden="true" id="meter">
+    <div class="base"></div>
+    <div class="ember" id="ember"></div>
+    <span class="lab" style="left:0">낮음</span><span class="lab c">정확</span><span class="lab" style="right:0">높음</span>
+  </div>
 
   <div class="pf-label"><span>줄 선택</span></div>
   <div class="pf-tabs" id="tabs" role="tablist" aria-label="줄 선택"></div>
