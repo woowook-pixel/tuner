@@ -6,7 +6,7 @@
 <title>Pitch</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="https://personal-design-rho.vercel.app/icons/pixel/pitch.svg">
-<link rel="apple-touch-icon" href="https://personal-design-rho.vercel.app/icons/pixel/pitch-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAABl0lEQVR42u3cwQmDQBBA0RjSwEwdaSwVpbHUMTXYQJzDwKLge1eZFZfPehG3iHjAP09bgDgQB+JAHIgDcSAOxIE4EAeIA3EgDsSBOBAH4kAciANxgDgQB+JAHIgDcSAOxIE4EAe8zr19VR1dyszZYD/bD/bGy46fpR90ciAOxIE4EAfiQBwgDsSBOBAH4kAciANxIA7EAeJAHIgDcSAOxIE4EAfiQByIA8SBOBAH4kAciANxIA7EgThAHIgDcSAOxIE4EAfiQBzczBYRS29Qn7ddXiS/PycHXiuIA3EgDsSBOEAciANxIA7EgTgQB+JAHIgDxIE4mFj+DWmvqo4uZeZssJ/tB3vjZcfP0g86ORAH4kAciANxIA4QB+JAHIgDcSAOxIE4EAfiAHEgDsSBOBAH4kAciANxIA7EAeJAHIgDcSAOxIE4EAfi4KZO/psgTg7EgTgQB+IAcSAOxIE4EAfiQByIA3EgDhAH4kAciANxIA7EgTgQB+IAcSAOxIE4EAfiQByIA3EgDsRhCxAH4kAciANxcEk7zRwjM9lynasAAAAASUVORK5CYII=">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pitch">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <link rel="stylesheet" href="https://personal-design-rho.vercel.app/v1/tokens.css">
+<script src="https://personal-design-rho.vercel.app/v1/symbols.js" defer></script>
 <style>
 /* Pitch: 중앙 공통 토큰(personal-design-rho.vercel.app/v1/tokens.css) 위에 얹는 화면 전용 스타일 */
 *,*::before,*::after{box-sizing:border-box}
@@ -75,8 +76,8 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
     <div class="pf-topbar">
       <span class="pf-wordmark">Pitch</span>
       <div class="pf-actions">
-        <button class="pf-action" id="runBtn">시작</button>
-        <button class="pf-action" id="gearBtn">설정</button>
+        <button class="pf-action" id="runBtn"><pf-sym name="play"></pf-sym>시작</button>
+        <button class="pf-action" id="gearBtn"><pf-sym name="settings"></pf-sym>설정</button>
       </div>
     </div>
   </header>
@@ -97,21 +98,21 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
   <div class="pf-tabs" id="tabs" role="tablist" aria-label="줄 선택"></div>
   <div class="hint" id="hint"></div>
 
-  <button class="pf-btn-primary" id="startBtn">마이크 켜고 시작</button>
+  <button class="pf-btn-primary" id="startBtn"><pf-sym name="mic"></pf-sym>마이크 켜고 시작</button>
   <div class="err" id="err"></div>
 </main>
 
 <div class="pf-update pf-no-tabbar" id="update" role="status" hidden>
   <span class="pf-update-text">새 버전이 있습니다</span>
   <button type="button" class="pf-update-later" id="updateLater">나중에</button>
-  <button type="button" class="pf-update-reload" id="updateReload">새로고침</button>
+  <button type="button" class="pf-update-reload" id="updateReload"><pf-sym name="refresh"></pf-sym>새로고침</button>
 </div>
 
 <div class="scrim" id="scrim" hidden>
   <div class="pf-sheet sheet" role="dialog" aria-modal="true" aria-label="설정">
     <div class="sheet-head">
       <h2>설정</h2>
-      <button class="pf-action" id="closeBtn">닫기</button>
+      <button class="pf-action" id="closeBtn"><pf-sym name="close"></pf-sym>닫기</button>
     </div>
     <div class="pf-label"><span>악기 선택</span></div>
     <div class="pf-list">
@@ -122,7 +123,7 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
     <div class="refline">
       <button class="pf-action" id="refDown" aria-label="기준음 낮추기">−</button>
       <output id="refVal">440Hz</output>
-      <button class="pf-action" id="refUp" aria-label="기준음 높이기">+</button>
+      <button class="pf-action" id="refUp" aria-label="기준음 높이기"><pf-sym name="plus"></pf-sym></button>
     </div>
     <p class="refnote">피아노 등 다른 악기와 음높이를 맞출 때만 바꿉니다. 보통은 440Hz 그대로 두면 됩니다.</p>
     <button class="pf-btn-primary" id="doneBtn">완료</button>
@@ -238,7 +239,7 @@ function setRef(v){
 }
 function syncRun(){
   const on=document.body.dataset.run==='1';
-  $('runBtn').textContent = on ? '정지' : '시작';
+  $('runBtn').innerHTML = on ? '<pf-sym name="stop"></pf-sym>정지' : '<pf-sym name="play"></pf-sym>시작';
   renderEyebrow();
 }
 
