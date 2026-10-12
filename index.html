@@ -102,6 +102,12 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
   <div class="err" id="err"></div>
 </main>
 
+<div class="pf-update pf-no-tabbar" id="update" role="status" hidden>
+  <span class="pf-update-text">새 버전이 있습니다</span>
+  <button type="button" class="pf-update-later" id="updateLater">나중에</button>
+  <button type="button" class="pf-update-reload" id="updateReload">새로고침</button>
+</div>
+
 <div class="scrim" id="scrim" hidden>
   <div class="pf-sheet sheet" role="dialog" aria-modal="true" aria-label="설정">
     <div class="sheet-head">
@@ -353,6 +359,50 @@ function stop(){
   document.body.dataset.run='0'; syncRun();
   idle();
 }
+
+// 새 버전 알림: /version.json과 이 파일에 들어 있는 APP_VERSION을 비교한다.
+const APP_VERSION = '__APP_VERSION__'; // 배포 빌드에서 scripts/write-version.js가 커밋 SHA로 바꾼다
+(function(){
+  const bar=$('update');
+  const KEY='pitch.updateLater';
+  let later=''; try{ later=sessionStorage.getItem(KEY)||''; }catch(e){}
+  let latest='';
+  async function check(){
+    if(APP_VERSION.startsWith('__')) return; // 빌드에서 값이 주입되지 않은 환경(로컬 등)은 비교하지 않는다
+    try{
+      const r=await fetch('/version.json',{cache:'no-store'});
+      if(!r.ok) return;
+      const v=(await r.json()).version;
+      if(typeof v!=='string'||!v) return;
+      latest=v;
+      bar.hidden=!(v!==APP_VERSION&&v!==later);
+    }catch(e){ /* 오프라인이거나 받지 못하면 아무것도 띄우지 않는다 */ }
+  }
+  $('updateLater').onclick=()=>{
+    later=latest; bar.hidden=true;
+    try{ sessionStorage.setItem(KEY,later); }catch(e){}
+  };
+  $('updateReload').onclick=async()=>{
+    try{
+      const reg='serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : null;
+      if(reg){
+        await reg.update();
+        if(reg.waiting) reg.waiting.postMessage('skipWaiting');
+        const w=reg.installing||reg.waiting;
+        if(w&&w.state!=='activated'){
+          await new Promise(res=>{
+            w.addEventListener('statechange',()=>{ if(w.state==='activated'||w.state==='redundant') res(); });
+            setTimeout(res,3000);
+          });
+        }
+      }
+    }catch(e){}
+    location.reload();
+  };
+  check();                                                        // 앱이 열릴 때
+  document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') check(); }); // 앱으로 돌아올 때
+  setInterval(check,5*60*1000);                                   // 5분마다
+})();
 
 setRef(a4);
 renderStrings();
