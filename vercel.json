@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node scripts/write-version.js",
+  "buildCommand": "node scripts/build.js",
   "outputDirectory": ".",
   "headers": [
     { "source": "/version.json", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
