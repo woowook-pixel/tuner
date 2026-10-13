@@ -1,6 +1,6 @@
 # Pitch 적용 기준
 
-공통 기준은 `DESIGN.md`, 토큰은 `tokens.css`를 따른다. 이 문서는 Pitch(구 튜너)에만 해당하는 내용이다.
+공통 기준과 토큰은 `design/shared/`(`DESIGN.md`, `tokens.css`)를 따른다. 이 문서는 Pitch(구 튜너)에만 해당하는 내용이다.
 
 ## 앱 이름
 
@@ -52,7 +52,7 @@
 
 ## 아이콘
 
-- `icons/pitch.svg` 원본
-- `icons/pitch-180.png` → apple-touch-icon
-- `icons/pitch-192.png`, `icons/pitch-512.png` → manifest icons
+- `design/shared/icons/pitch.svg` → favicon
+- `design/shared/icons/apple-touch-icon.datauri.txt` → apple-touch-icon(빌드 때 `scripts/build.js`가 HTML에 삽입)
+- `design/shared/icons/pitch-192.png`, `pitch-512.png` → manifest icons
 - manifest의 `theme_color`, `background_color`는 #FFFFFF
