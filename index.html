@@ -27,7 +27,8 @@ button{font:inherit;color:inherit;border-radius:0;cursor:pointer}
   padding-bottom:max(20px,env(safe-area-inset-bottom,0px))}
 
 /* 제목 블록: 보조 라벨 + 음 이름 */
-.pf-titleblock{padding-bottom:6px}
+/* 음 이름 블록: 제목 줄이 아니라 큰 글자라서 공통 .pf-titleblock(제목 왼쪽, 보조 라벨 오른쪽, CHANGELOG 009)을 쓰지 않고 기존 모양을 유지한다 */
+.noteblock{display:flex;flex-direction:column;gap:10px;padding:24px 0 6px}
 .note{font:900 150px/.9 var(--pf-font);letter-spacing:-.04em;color:#D6D6D6;margin-left:-.04em;transition:color .15s}
 .note .oct{font:900 48px/1 var(--pf-font);letter-spacing:0;color:var(--pf-black);margin-left:6px}
 .readout[data-state="good"] .note{color:var(--pf-black)}
@@ -83,7 +84,7 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
     </div>
   </header>
 
-  <div class="pf-titleblock">
+  <div class="noteblock">
     <div class="pf-eyebrow" id="eyebrow"></div>
     <div class="note" id="note">E<span class="oct">2</span></div>
   </div>
