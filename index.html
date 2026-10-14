@@ -78,7 +78,10 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
     <div class="pf-topbar">
       <span class="pf-brand">
         <span class="pf-wordmark">Pitch</span>
-        <img class="pf-brand-icon" src="/design/shared/icons/pitch.svg" alt="" width="20" height="20">
+        <picture>
+          <source srcset="/design/shared/characters/pitch-still.png" media="(prefers-reduced-motion: reduce)">
+          <img class="pf-brand-character" src="/design/shared/characters/pitch.gif" alt="" width="24" height="24">
+        </picture>
       </span>
       <div class="pf-actions">
         <button class="pf-action" id="runBtn"><pf-sym name="play"></pf-sym>시작</button>

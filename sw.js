@@ -1,4 +1,4 @@
-const CACHE = 'pitch-v5';
+const CACHE = 'pitch-v6';
 const CORE = ['./', './index.html'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -12,7 +12,7 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   // 아이콘(중앙 주소 포함)과 manifest는 서비스 워커를 거치지 않고 브라우저가 직접 받게 한다(홈 화면 아이콘 로딩에 간섭하지 않도록)
   const u = new URL(e.request.url);
-  if (/\.(png|svg|ico|webmanifest)$/.test(u.pathname) || (u.origin === location.origin && u.pathname === '/version.json')) return;
+  if (/\.(png|gif|svg|ico|webmanifest)$/.test(u.pathname) || (u.origin === location.origin && u.pathname === '/version.json')) return;
   e.respondWith(
     fetch(e.request).then(r => {
       const copy = r.clone();
