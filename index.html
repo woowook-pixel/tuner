@@ -126,11 +126,6 @@ button:focus-visible{outline:2px solid var(--pf-black);outline-offset:2px}
     <div class="pf-list">
       <button class="pf-row inst" data-inst="guitar" aria-pressed="true"><span class="nm">기타</span><span class="pf-row-sub">6현 · E A D G B E</span><i class="box"></i></button>
       <button class="pf-row inst" data-inst="bass" aria-pressed="false"><span class="nm">베이스</span><span class="pf-row-sub">4현 · E A D G</span><i class="box"></i></button>
-      <button class="pf-row inst" data-inst="acbass" aria-pressed="false"><span class="nm">어쿠스틱 베이스</span><span class="pf-row-sub">4현 · E A D G</span><i class="box"></i></button>
-      <button class="pf-row inst" data-inst="classical" aria-pressed="false"><span class="nm">클래식 기타</span><span class="pf-row-sub">6현 · E A D G B E</span><i class="box"></i></button>
-      <button class="pf-row inst" data-inst="violin" aria-pressed="false"><span class="nm">바이올린</span><span class="pf-row-sub">4현 · G D A E</span><i class="box"></i></button>
-      <button class="pf-row inst" data-inst="viola" aria-pressed="false"><span class="nm">비올라</span><span class="pf-row-sub">4현 · C G D A</span><i class="box"></i></button>
-      <button class="pf-row inst" data-inst="cello" aria-pressed="false"><span class="nm">첼로</span><span class="pf-row-sub">4현 · C G D A</span><i class="box"></i></button>
     </div>
     <div class="pf-label"><span>기준음 (A4)</span></div>
     <div class="refline">
@@ -149,20 +144,9 @@ const TUNINGS = {
     {n:'E',o:2,m:40,g:5},{n:'A',o:2,m:45,g:4},{n:'D',o:3,m:50,g:4},
     {n:'G',o:3,m:55,g:3},{n:'B',o:3,m:59,g:2},{n:'E',o:4,m:64,g:2}]},
   bass: { minF: 35, maxF: 120, strings: [
-    {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]},
-  acbass: { minF: 35, maxF: 120, strings: [
-    {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]},
-  classical: { minF: 70, maxF: 400, strings: [
-    {n:'E',o:2,m:40,g:5},{n:'A',o:2,m:45,g:4},{n:'D',o:3,m:50,g:4},
-    {n:'G',o:3,m:55,g:3},{n:'B',o:3,m:59,g:2},{n:'E',o:4,m:64,g:2}]},
-  violin: { minF: 180, maxF: 700, strings: [
-    {n:'G',o:3,m:55,g:4},{n:'D',o:4,m:62,g:3},{n:'A',o:4,m:69,g:2},{n:'E',o:5,m:76,g:1}]},
-  viola: { minF: 120, maxF: 480, strings: [
-    {n:'C',o:3,m:48,g:4},{n:'G',o:3,m:55,g:3},{n:'D',o:4,m:62,g:2},{n:'A',o:4,m:69,g:1}]},
-  cello: { minF: 60, maxF: 260, strings: [
-    {n:'C',o:2,m:36,g:4},{n:'G',o:2,m:43,g:3},{n:'D',o:3,m:50,g:2},{n:'A',o:3,m:57,g:1}]}
+    {n:'E',o:1,m:28,g:7},{n:'A',o:1,m:33,g:6},{n:'D',o:2,m:38,g:5},{n:'G',o:2,m:43,g:4}]}
 };
-const INST_NAME = { guitar:'기타', bass:'베이스', acbass:'어쿠스틱 베이스', classical:'클래식 기타', violin:'바이올린', viola:'비올라', cello:'첼로' };
+const INST_NAME = { guitar:'기타', bass:'베이스' };
 const IN_TUNE = 3;      // ±센트
 const GATE_RMS = 0.008; // 이하 무음 처리
 const HOLD_MS = 900;
